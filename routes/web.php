@@ -8,4 +8,4 @@ Route::get('/movimentacoes/novo', function () { return view('movimentos.form-mov
 // Rotas das Parcelas
 Route::get('/parcelas', ['as' => 'parcelas.index' , 'uses' => 'ParcelasController@index']);
 Route::post('/parcelas', ['as' => 'parcelas.salvar', 'uses' => 'ParcelasController@store']);
-Route::get('/parcelas/novo', function () { return view('parcelas.form-parcela'); });
+Route::get('/parcelas/novo', ['as' => 'parcelas.novo', 'uses' => 'ParcelasController@create']);

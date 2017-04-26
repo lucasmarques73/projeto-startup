@@ -14,6 +14,12 @@ use App\Validators\MovimentoValidator;
  */
 class MovimentoRepositoryEloquent extends BaseRepository implements MovimentoRepository
 {
+
+  public function lists($column = 'title', $key = 'id', $limit = null)
+  {
+      return $this->model->pluck($column, $key)->all();
+  }
+
     /**
      * Specify Model class name
      *

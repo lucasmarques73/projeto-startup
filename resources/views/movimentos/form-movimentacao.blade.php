@@ -29,6 +29,12 @@
                   {!! Form::label('data_emissao', 'Data de Emissão') !!}
                   {!! Form::input('date', 'data_emissao', null, ['class' => 'form-control'])!!}
 
+                  {!! Form::label('valor_total', 'Valor Total') !!}
+                  {!! Form::input('number', 'valor_total', null, ['class' => 'form-control', 'placeholder' => 'Valor Total'])!!}
+
+                  {!! Form::label('numero_parcela', 'Número de Parcelas') !!}
+                  {!! Form::input('number', 'numero_parcela', null, ['class' => 'form-control', 'placeholder' => 'Número de Parcelas'])!!}
+
                   {!! Form::submit('Salvar', ['class' => 'btn btn-primary'])!!}
 
                   {!! Form::close() !!}

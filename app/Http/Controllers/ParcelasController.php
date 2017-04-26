@@ -12,6 +12,8 @@ use App\Http\Requests\ParcelaUpdateRequest;
 use App\Repositories\ParcelaRepository;
 use App\Validators\ParcelaValidator;
 
+use App\Repositories\MovimentoRepository;
+
 
 class ParcelasController extends Controller
 {
@@ -26,10 +28,13 @@ class ParcelasController extends Controller
      */
     protected $validator;
 
-    public function __construct(ParcelaRepository $repository, ParcelaValidator $validator)
+    protected $MovimentoRepository;
+
+    public function __construct(ParcelaRepository $repository,MovimentoRepository $MovimentoRepository, ParcelaValidator $validator)
     {
         $this->repository = $repository;
         $this->validator  = $validator;
+        $this->MovimentoRepository  = $MovimentoRepository;
     }
 
 
@@ -50,7 +55,14 @@ class ParcelasController extends Controller
             ]);
         }
 
-        return view('parcelas.index', compact('parcelas'));
+        return view('parcelas.index', ['parcelas' => $parcelas]);
+    }
+
+    public function create()
+    {
+      $movimentos = $this->MovimentoRepository->lists('descricao', 'id');
+
+      return view('parcelas.form-parcela', ['movimentos' => $movimentos]);
     }
 
     /**

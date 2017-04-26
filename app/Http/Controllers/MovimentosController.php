@@ -12,6 +12,8 @@ use App\Http\Requests\MovimentoUpdateRequest;
 use App\Repositories\MovimentoRepository;
 use App\Validators\MovimentoValidator;
 
+use App\Repositories\ParcelaRepository;
+
 
 class MovimentosController extends Controller
 {
@@ -26,10 +28,13 @@ class MovimentosController extends Controller
      */
     protected $validator;
 
-    public function __construct(MovimentoRepository $repository, MovimentoValidator $validator)
+    protected $Parcelarepository;
+
+    public function __construct(MovimentoRepository $repository,ParcelaRepository $Parcelarepository, MovimentoValidator $validator)
     {
         $this->repository = $repository;
         $this->validator  = $validator;
+        $this->Parcelarepository  = $Parcelarepository;
     }
 
 
@@ -68,6 +73,18 @@ class MovimentosController extends Controller
             $this->validator->with($request->all())->passesOrFail(ValidatorInterface::RULE_CREATE);
 
             $movimento = $this->repository->create($request->all());
+            $valor_parcela = $request->get('valor_total') / $request->get('numero_parcela');
+
+            for ($i = 1; $i <= $request->get('numero_parcela'); $i++) {
+                $parcela = $this->Parcelarepository->create([
+                  'tbl_movimentacao_id' => $movimento['id'],
+                  'numero_parcela'      => $i              ,
+                  'valor_parcela'       => $valor_parcela  ,
+                  'status'              => 'à pagar'
+                ]);
+            }
+
+
 
             $response = [
                 'message' => 'Movimento created.',

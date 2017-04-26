@@ -9,7 +9,6 @@
                   Dados da Parcela
                   <a class="pull-right" href="{{url('parcelas')}}">Lista de Parcelas</a>
                 </div>
-
                 <div class="panel-body">
                   @if(Session::has('message'))
                     <div class='alert '>{{Session::get('message')}}</div>
@@ -18,7 +17,7 @@
                   {!! Form::open(['route' => 'parcelas.salvar', 'method' => 'POST']) !!}
 
                   {!! Form::label('tbl_movimentacao_id', 'Movimentação') !!}
-                  {!! Form::input('text', 'tbl_movimentacao_id', null, ['class' => 'form-control','autofocus', 'placeholder' => 'Movimentação'])!!}
+                  {!! Form::select('tbl_movimentacao_id', $movimentos, null, ['class' => 'form-control']) !!}
 
                   {!! Form::label('status', 'Status') !!}
                   {!! Form::input('text', 'status', null, ['class' => 'form-control', 'placeholder' => 'Status'])!!}
