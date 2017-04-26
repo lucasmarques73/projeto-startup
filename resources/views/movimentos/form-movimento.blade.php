@@ -6,8 +6,8 @@
         <div class="col-md-8 col-md-offset-2">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                  Dados da Movimentação
-                  <a class="pull-right" href="{{url('movimentacoes')}}">Lista de Movimentações</a>
+                  Dados da Movimento
+                  <a class="pull-right" href="{{url('movimentos')}}">Lista de Movimentos</a>
                 </div>
 
                 <div class="panel-body">
@@ -15,7 +15,7 @@
                     <div class='alert '>{{Session::get('message')}}</div>
                   @endif
 
-                  {!! Form::open(['route' => 'movimentacao.salvar', 'method' => 'POST']) !!}
+                  {!! Form::open(['route' => 'movimentos.salvar', 'method' => 'POST']) !!}
 
                   {!! Form::label('tipo', 'Tipo') !!}
                   {!! Form::input('text', 'tipo', null, ['class' => 'form-control','autofocus', 'placeholder' => 'Tipo'])!!}

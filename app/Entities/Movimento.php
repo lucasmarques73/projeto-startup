@@ -11,13 +11,13 @@ class Movimento extends Model implements Presentable
     use PresentableTrait;
 
     public $timestamps = true;
-    protected $table = 'tbl_movimentacao';
+    protected $table = 'movimentos';
     protected $fillable = ['tipo','categoria', 'descricao', 'data_emissao'];
     protected $hidden = [''];
 
     public function Parcela()
     {
-        return $this->hasMany(Parcela::Class, 'tbl_movimentacao_id', 'id');
+        return $this->hasMany(Parcela::Class, 'movimento_id', 'id');
     }
 
 }

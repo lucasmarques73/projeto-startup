@@ -16,6 +16,20 @@ class CreateParcelasTable extends Migration
 		Schema::create('parcelas', function(Blueprint $table) {
             $table->increments('id');
 
+						$table->integer('movimento_id')->unsigned();
+
+						$table->string('status',50);
+
+						$table->date('data_vencimento')->nullable();
+						$table->date('data_pagamento')->nullable();
+
+						$table->decimal('valor_parcela',10,2);
+						$table->decimal('valor_pago',10,2)->nullable();
+
+						$table->integer('numero_parcela');
+
+						$table->foreign('movimento_id')->references('id')->on('movimentos');
+
             $table->timestamps();
 		});
 	}
@@ -27,7 +41,11 @@ class CreateParcelasTable extends Migration
 	 */
 	public function down()
 	{
-		Schema::drop('parcelas');
+			Schema::table('parcelas', function (Blueprint $table){
+        $table->dropForeign('parcelas_movimento_id_foreign');
+      });
+
+      Schema::dropIfExists('parcelas');
 	}
 
 }

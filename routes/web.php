@@ -1,9 +1,9 @@
 <?php
 
 //Rotdas das Movimentações
-Route::get('/movimentacoes', ['as' => 'movimentacao.index', 'uses' => 'MovimentosController@index']);
-Route::post('/movimentacoes',['as' => 'movimentacao.salvar', 'uses' => 'MovimentosController@store'] );
-Route::get('/movimentacoes/novo', function () { return view('movimentos.form-movimentacao'); });
+Route::get('/movimentos', ['as' => 'movimentos.index', 'uses' => 'MovimentosController@index']);
+Route::post('/movimentos',['as' => 'movimentos.salvar', 'uses' => 'MovimentosController@store'] );
+Route::get('/movimentos/novo', ['as' => 'movimentos.novo', 'uses' => 'MovimentosController@create']);
 
 // Rotas das Parcelas
 Route::get('/parcelas', ['as' => 'parcelas.index' , 'uses' => 'ParcelasController@index']);

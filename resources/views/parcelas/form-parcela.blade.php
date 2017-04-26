@@ -16,8 +16,8 @@
 
                   {!! Form::open(['route' => 'parcelas.salvar', 'method' => 'POST']) !!}
 
-                  {!! Form::label('tbl_movimentacao_id', 'Movimentação') !!}
-                  {!! Form::select('tbl_movimentacao_id', $movimentos, null, ['class' => 'form-control']) !!}
+                  {!! Form::label('movimento_id', 'Movimentação') !!}
+                  {!! Form::select('movimento', $movimentos, null, ['class' => 'form-control']) !!}
 
                   {!! Form::label('status', 'Status') !!}
                   {!! Form::input('text', 'status', null, ['class' => 'form-control', 'placeholder' => 'Status'])!!}

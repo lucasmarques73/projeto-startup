@@ -58,6 +58,13 @@ class MovimentosController extends Controller
         return view('movimentos.index', compact('movimentos'));
     }
 
+    public function create()
+    {
+      $movimentos = $this->repository->all();
+
+      return view('movimentos.form-movimento', ['movimentos' => $movimentos]);
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -77,7 +84,7 @@ class MovimentosController extends Controller
 
             for ($i = 1; $i <= $request->get('numero_parcela'); $i++) {
                 $parcela = $this->Parcelarepository->create([
-                  'tbl_movimentacao_id' => $movimento['id'],
+                  'movimento_id' => $movimento['id'],
                   'numero_parcela'      => $i              ,
                   'valor_parcela'       => $valor_parcela  ,
                   'status'              => 'à pagar'

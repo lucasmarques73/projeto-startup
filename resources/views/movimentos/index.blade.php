@@ -7,7 +7,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                   Movimentações
-                  <a class="pull-right" href="{{url('movimentacoes/novo')}}">Nova Movimentação</a>
+                  <a class="pull-right" href="{{url('movimentos/novo')}}">Novo Movimento</a>
                 </div>
 
                 <table class="table">

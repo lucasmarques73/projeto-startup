@@ -11,13 +11,13 @@ class Parcela extends Model implements Presentable
     use PresentableTrait;
 
     public $timestamps = true;
-    protected $table = 'tbl_parcela';
-    protected $fillable = ['tbl_movimentacao_id', 'data_pagamento', 'data_vencimento', 'valor_pago', 'numero_parcela','valor_parcela', 'status'];
+    protected $table = 'parcelas';
+    protected $fillable = ['movimento_id', 'data_pagamento', 'data_vencimento', 'valor_pago', 'numero_parcela','valor_parcela', 'status'];
     protected $hidden = [''];
 
     public function Movimento()
     {
-        return $this->belongsTo(Movimento::Class, 'tbl_movimentacao_id', 'id');
+        return $this->belongsTo(Movimento::Class, 'movimento_id', 'id');
     }
 
 }

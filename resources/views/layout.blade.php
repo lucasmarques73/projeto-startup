@@ -44,7 +44,7 @@
                   <!-- Left Side Of Navbar -->
                   <ul class="nav navbar-nav">
                       &nbsp;
-                    <li><a href="{{url('/movimentacoes')}}">Movimentações</a></li>
+                    <li><a href="{{url('/movimentos')}}">Movimentos</a></li>
                     <li><a href="{{url('/parcelas')}}">Parcelas</a></li>
                   </ul>
 

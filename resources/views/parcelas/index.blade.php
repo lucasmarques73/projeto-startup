@@ -24,7 +24,7 @@
                     <tbody>
                       @foreach($parcelas as $parcela)
                       <tr>
-                        <td>{{$parcela->tbl_movimentacao_id}}: {{ $parcela->Movimento->descricao }}</td>
+                        <td>{{$parcela->movimento_id}}: {{ $parcela->Movimento->descricao }}</td>
                         <td>{{$parcela->status}}</td>
                         <td>{{$parcela->numero_parcela}}</td>
                         <td>{{$parcela->data_vencimento}}</td>
