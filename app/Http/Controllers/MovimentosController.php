@@ -82,12 +82,23 @@ class MovimentosController extends Controller
             $movimento = $this->repository->create($request->all());
             $valor_parcela = $request->get('valor_total') / $request->get('numero_parcela');
 
+            /**
+            *   $data = date('Y-m-d', strtotime("+1 month", strtotime($data)));
+            *
+            *   Adionando 1 mês para data;
+            **/
+            $data_emissao = $request->get('data_emissao');
+
             for ($i = 1; $i <= $request->get('numero_parcela'); $i++) {
+
+                $data_vencimento = date('Y-m-d', strtotime("+" . $i . " month", strtotime($data_emissao)));
+
                 $parcela = $this->Parcelarepository->create([
                   'movimento_id' => $movimento['id'],
                   'numero_parcela'      => $i              ,
                   'valor_parcela'       => $valor_parcela  ,
-                  'status'              => 'à pagar'
+                  'status'              => 'à pagar'       ,
+                  'data_vencimento'     => $data_vencimento
                 ]);
             }
 
