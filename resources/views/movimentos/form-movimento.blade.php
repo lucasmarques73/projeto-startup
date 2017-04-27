@@ -18,10 +18,10 @@
                   {!! Form::open(['route' => 'movimentos.salvar', 'method' => 'POST']) !!}
 
                   {!! Form::label('tipo', 'Tipo') !!}
-                  {!! Form::input('text', 'tipo', null, ['class' => 'form-control','autofocus', 'placeholder' => 'Tipo'])!!}
+                  {!! Form::select('tipo', ['1' => 'UM', '2' => 'DOIS', '3' => 'TRÊS'], '1',['class' => 'form-control']) !!}
 
                   {!! Form::label('categoria', 'Categoria') !!}
-                  {!! Form::input('text', 'categoria', null, ['class' => 'form-control', 'placeholder' => 'Categoria'])!!}
+                  {!! Form::select('categoria', ['a' => 'AAA', 'b' => 'BBB', 'c' => 'CCC'], 'a',['class' => 'form-control']) !!}
 
                   {!! Form::label('descricao', 'Descrição') !!}
                   {!! Form::input('text', 'descricao', null, ['class' => 'form-control', 'placeholder' => 'Descrição'])!!}

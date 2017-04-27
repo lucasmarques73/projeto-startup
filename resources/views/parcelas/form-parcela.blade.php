@@ -14,13 +14,18 @@
                     <div class='alert '>{{Session::get('message')}}</div>
                   @endif
 
-                  {!! Form::open(['route' => 'parcelas.salvar', 'method' => 'POST']) !!}
+
+                  @if(Request::is('*/editar'))
+                    {!! Form::model($parcela, ['method' => 'PATCH','url' => 'parcelas/'.$parcela->id])!!}
+                  @else
+                      {!! Form::open(['route' => 'parcelas.salvar', 'method' => 'POST']) !!}
+                  @endif
 
                   {!! Form::label('movimento_id', 'Movimentação') !!}
                   {!! Form::select('movimento', $movimentos, null, ['class' => 'form-control']) !!}
 
                   {!! Form::label('status', 'Status') !!}
-                  {!! Form::input('text', 'status', null, ['class' => 'form-control', 'placeholder' => 'Status'])!!}
+                  {!! Form::select('status', ['à Pagar' => 'à Pagar', 'Pago' => 'Pago'], 'à Pagar',['class' => 'form-control']) !!}
 
                   {!! Form::label('numero_parcela', 'Número da Parcela') !!}
                   {!! Form::input('number', 'numero_parcela', null, ['class' => 'form-control', 'placeholder' => 'Número da Parcela'])!!}
