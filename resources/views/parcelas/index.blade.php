@@ -3,7 +3,7 @@
 @section('content')
 <div class="container">
     <div class="row">
-        <div class="col-md-8 col-md-offset-2">
+        <div class="col-md-10 col-md-offset-1">
             <div class="panel panel-default">
                 <div class="panel-heading">
                   Parcelas
@@ -34,6 +34,7 @@
                         <td>{{$parcela->valor_parcela}}</td>
                         <td>{{$parcela->valor_pago}}</td>
                         <td><button class="btn btn-success" data-toggle="modal" data-target="#myModal">Pagar</button></td>
+                        <td><a href="parcelas/{{ $parcela->id }}/editar" class="btn btn-warning">Editar</a></td>
                       </tr>
                     @endforeach
                     </tbody>
@@ -48,13 +49,16 @@
 <!-- Modal -->
  <div class="modal fade" id="myModal" role="dialog">
    <div class="modal-dialog">
-     {!! Form::open(['route' => 'parcelas.salvar', 'method' => 'POST']) !!}
+     {!! Form::open(['route' => 'parcelas.salvar', 'method' => 'PUT']) !!}
        <!-- Modal content-->
        <div class="modal-content">
          <div class="modal-header">
            <button type="button" class="close" data-dismiss="modal">&times;</button>
            <h4 class="modal-title">Dados do Pagamento</h4>
          </div>
+         @if(Session::has('message'))
+           <div class='alert '>{{Session::get('message')}}</div>
+         @endif
 
            <div class="modal-body">
              <div class="container-fluid">

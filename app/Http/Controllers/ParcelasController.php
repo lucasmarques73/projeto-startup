@@ -135,10 +135,12 @@ class ParcelasController extends Controller
      */
     public function edit($id)
     {
+      $movimentos = $this->MovimentoRepository->lists('descricao', 'id');
+      $parcela = $this->repository->find($id);
 
-        $parcela = $this->repository->find($id);
+      return view('parcelas.form-parcela', ['movimentos' => $movimentos, 'parcela' => $parcela]);
 
-        return view('parcelas.edit', compact('parcela'));
+
     }
 
 
