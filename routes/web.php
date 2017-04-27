@@ -9,3 +9,10 @@ Route::get('/movimentos/novo', ['as' => 'movimentos.novo', 'uses' => 'Movimentos
 Route::get('/parcelas', ['as' => 'parcelas.index' , 'uses' => 'ParcelasController@index']);
 Route::post('/parcelas', ['as' => 'parcelas.salvar', 'uses' => 'ParcelasController@store']);
 Route::get('/parcelas/novo', ['as' => 'parcelas.novo', 'uses' => 'ParcelasController@create']);
+
+//Parcelas PDF
+Route::get('/parcelas/pdf', function(){
+  $parcelas = App\Entities\Parcela::all();
+  $pdf = PDF::loadView('parcelas.index',['parcelas' => $parcelas]);
+  return $pdf->download('parcelas.pdf');
+});
