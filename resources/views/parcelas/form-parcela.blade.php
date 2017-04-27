@@ -25,7 +25,7 @@
                   {!! Form::select('movimento', $movimentos, null, ['class' => 'form-control']) !!}
 
                   {!! Form::label('status', 'Status') !!}
-                  {!! Form::select('status', ['à Pagar' => 'à Pagar', 'Pago' => 'Pago'], 'à Pagar',['class' => 'form-control']) !!}
+                  {!! Form::select('status', ['à pagar' => 'à pagar', 'pago' => 'pago'], null,['class' => 'form-control']) !!}
 
                   {!! Form::label('numero_parcela', 'Número da Parcela') !!}
                   {!! Form::input('number', 'numero_parcela', null, ['class' => 'form-control', 'placeholder' => 'Número da Parcela'])!!}

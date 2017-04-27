@@ -3,7 +3,7 @@
 @section('content')
 <div class="container">
     <div class="row">
-        <div class="col-md-8 col-md-offset-2">
+        <div class="col-md-10 col-md-offset-1">
             <div class="panel panel-default">
                 <div class="panel-heading">
                   Movimentações
@@ -17,6 +17,7 @@
                       <th>Descrição</th>
                       <th>Data de Emissão</th>
                       <th>Parcelas</th>
+                      <th>Opções</th>
                     </thead>
                     <tbody>
                       @foreach($movimentos as $movimentacao)
@@ -30,6 +31,7 @@
                           {{$parcela->numero_parcela}}: {{$parcela->status}}
                         @endforeach
                         </td>
+                        <td></td>
                       </tr>
                     @endforeach
                     </tbody>
