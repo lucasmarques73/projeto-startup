@@ -7,21 +7,29 @@
     img{
       height: 50px;
       width: 50px;
-      border-radius: 50%;
+      padding: 5px;
     }
     table{
       width: 100%;
       border-collapse: collapse;
-    }
-    table, th, td {
       border: 1px solid black;
+      padding: 5px;
+      font-family: monospace;
+    }
+    th{
+      border-bottom: 1px solid black;
+      background-color: #ffad99;
+      padding: 5px;
+    }
+    td{
+      padding: 5px;
     }
     </style>
   </head>
   <body>
     <img src="assets/images/logo.png" alt="">
       <table>
-          <thead>
+          <tr>
             <th>Movimentação</th>
             <th>Status</th>
             <th>Número da Parcela</th>
@@ -29,10 +37,8 @@
             <th>Data de Pagamento</th>
             <th>Valor da Parcela</th>
             <th>Valor Pago</th>
-            <th></th>
-          </thead>
-          <tbody>
-            @foreach($parcelas as $parcela)
+          </tr>
+          @foreach($parcelas as $parcela)
             <tr>
               <td>{{$parcela->movimento_id}}: {{ $parcela->Movimento->descricao }}</td>
               <td>{{$parcela->status}}</td>
@@ -43,7 +49,6 @@
               <td>{{$parcela->valor_pago}}</td>
             </tr>
           @endforeach
-          </tbody>
         </table>
   </body>
 </html>
