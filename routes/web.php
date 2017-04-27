@@ -13,6 +13,6 @@ Route::get('/parcelas/novo', ['as' => 'parcelas.novo', 'uses' => 'ParcelasContro
 //Parcelas PDF
 Route::get('/parcelas/pdf', function(){
   $parcelas = App\Entities\Parcela::all();
-  $pdf = PDF::loadView('parcelas.index',['parcelas' => $parcelas]);
+  $pdf = PDF::loadView('parcelas.pdf',['parcelas' => $parcelas]);
   return $pdf->download('parcelas.pdf');
 });
