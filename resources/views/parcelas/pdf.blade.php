@@ -14,7 +14,8 @@
       border-collapse: collapse;
       border: 1px solid black;
       padding: 5px;
-      font-family: monospace;
+      font-family: sans-serif;
+      text-align: center;
     }
     th{
       border-bottom: 1px solid black;
