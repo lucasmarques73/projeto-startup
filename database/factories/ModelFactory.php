@@ -25,20 +25,21 @@ $factory->define(App\Entities\User::class, function (Faker\Generator $faker) {
 
 $factory->define(App\Entities\Movimento::class, function (Faker\Generator $faker) {
   return [
-    'tipo'        => ,
-    'categoria'   => ,
-    'descricao'   => ,
-    'data_emissao'=>
+    'tipo'        => $faker->word,
+    'categoria'   => $faker->word,
+    'descricao'   => $faker->sentence(3,true),
+    'data_emissao'=> $faker->date
   ];
 });
 
 $factory->define(App\Entities\Parcela::class, function (Faker\Generator $faker) {
   return [
-    'movimento_id'    =>,
-    'data_pagamento'  =>,
-    'data_vencimento' =>,
-    'valor_pago'      =>,
-    'valor_parcela'   =>,
-    'status'          =>
+    'movimento_id'    => rand(1,10),
+    'data_pagamento'  => null,
+    'data_vencimento' => $faker->date,
+    'valor_pago'      => null,
+    'valor_parcela'   => $faker->randomFloat(2,10,100),
+    'numero_parcela'  => rand(1,3),
+    'status'          => 'à pagar'
   ];
 });

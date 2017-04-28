@@ -8,15 +8,12 @@ class MovimentoTableSeeder extends Seeder
 
     public function run()
     {
-        \App\Entities\Movimento::truncate();
-        factoy(\App\Entities\Movimento::class, 10)->each(function($movimento){
+        //\App\Entities\Movimento::truncate();
+        factory(\App\Entities\Movimento::class,10)->create()->each(function ($movimento){
+            for ($i=0; $i < 3 ; $i++) {
+                $movimento->Parcela()->save(factory(\App\Entities\Parcela::class)->make());
+            }
 
-        $movimento->Parcelas()->save(factoy(\App\Entities\Parcela::class)->make());
-    })->create();
-
-
-
-
-
+        });
   }
 }
