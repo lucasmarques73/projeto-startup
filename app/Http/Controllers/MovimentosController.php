@@ -60,9 +60,11 @@ class MovimentosController extends Controller
 
     public function create()
     {
-      $movimentos = $this->repository->all();
+      // $movimentos = $this->repository->all();
+      //
+      // return view('movimentos.form-movimento', ['movimentos' => $movimentos]);
 
-      return view('movimentos.form-movimento', ['movimentos' => $movimentos]);
+      return view ('movimentos.form-movimento');
     }
 
     /**
@@ -102,8 +104,6 @@ class MovimentosController extends Controller
                 ]);
             }
 
-
-
             $response = [
                 'message' => 'Movimento created.',
                 'data'    => $movimento->toArray(),
@@ -123,7 +123,7 @@ class MovimentosController extends Controller
                 ]);
             }
 
-            return redirect()->back()->withErrors($e->getMessageBag())->withInput();
+            return redirect()->back()->with(['message' => $e->getMessageBag()])->withInput();
         }
     }
 

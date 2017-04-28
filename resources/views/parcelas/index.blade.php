@@ -33,7 +33,15 @@
                         <td>{{$parcela->data_pagamento}}</td>
                         <td>{{$parcela->valor_parcela}}</td>
                         <td>{{$parcela->valor_pago}}</td>
-                        <td><button class="btn btn-success" data-toggle="modal" data-target="#myModal">Pagar</button></td>
+                        <td>
+                          {!! Form::open(['route' => ['parcelas.pagar', $parcela->id], 'method' => 'put']) !!}
+                          {!! Form::submit('pagar', ['class' => 'btn btn-success']) !!}
+                          {!! Form::close() !!}
+                          {{--
+                          $('*['data-toggle="modal"']').click(function(){
+                            $(this).sibilings('form').addClass('show');
+                          }) --}}
+                          <!--<button class="btn btn-success" data-toggle="modal" data-target="#myModal">Pagar</button></td> -->
                         <td><a href="parcelas/{{ $parcela->id }}/editar" class="btn btn-warning">Editar</a></td>
                       </tr>
                     @endforeach

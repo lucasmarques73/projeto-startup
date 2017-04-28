@@ -8,14 +8,18 @@ Route::get('/movimentos/novo', ['as' => 'movimentos.novo', 'uses' => 'Movimentos
 // Rotas das Parcelas
 Route::get('/parcelas', ['as' => 'parcelas.index' , 'uses' => 'ParcelasController@index']);
 Route::post('/parcelas', ['as' => 'parcelas.salvar', 'uses' => 'ParcelasController@store']);
-Route::get('/parcelas/{id}/editar', ['as' => 'parcelas.edit', 'uses' => 'ParcelasController@edit']);
-Route::patch('/parcelas/{id}', ['as' => 'parcelas.edit', 'uses' => 'ParcelasController@update']);
 Route::put('/parcelas', ['as' => 'parcelas.salvar', 'uses' => 'ParcelasController@update']);
 Route::get('/parcelas/novo', ['as' => 'parcelas.novo', 'uses' => 'ParcelasController@create']);
+Route::get('/parcelas/{id}/editar', ['as' => 'parcelas.edit', 'uses' => 'ParcelasController@edit']);
+Route::patch('/parcelas/{id}', ['as' => 'parcelas.edit', 'uses' => 'ParcelasController@update']);
+
+//--------- Pagar parcela
+Route::put('/parcelas/{id}/pagar', ['as' => 'parcelas.pagar', 'uses' => 'ParcelasController@registrarPagamento']);
 
 //Parcelas PDF
 Route::get('/parcelas/pdf', function(){
   $parcelas = App\Entities\Parcela::all();
+  $pdf = PDF::loadView('parcelas.pdf',['parcelas' => $parcelas]);
   $pdf = PDF::loadView('parcelas.pdf',['parcelas' => $parcelas]);
   return $pdf->download('parcelas.pdf');
 });

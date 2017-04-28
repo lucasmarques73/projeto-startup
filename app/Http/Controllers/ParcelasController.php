@@ -144,6 +144,26 @@ class ParcelasController extends Controller
     }
 
 
+    public function registrarPagamento(Request $request, $id)
+    {
+        $parcela = $this->repository->find($id);
+
+        $data = [
+          'data_pagamento'  => date('Y-m-d'),
+          'valor_pago'      => $parcela->valor_parcela,
+          'status'          => 'pago',
+        ];
+
+        $parcela = $this->repository->update($data, $id);
+
+        $response = [
+            'message' => 'Parcela paga.',
+            'data'    => $parcela->toArray(),
+        ];
+
+        return redirect()->route('parcelas.index');
+    }
+
     /**
      * Update the specified resource in storage.
      *

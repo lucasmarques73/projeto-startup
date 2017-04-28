@@ -9,7 +9,12 @@ class MovimentoValidator extends LaravelValidator
 {
 
     protected $rules = [
-        ValidatorInterface::RULE_CREATE => [],
+        ValidatorInterface::RULE_CREATE => [
+          'tipo'          => 'required',
+          'categoria'     => 'required',
+          'descricao'     => 'required', 
+          'data_emissao'  => 'required|date'
+        ],
         ValidatorInterface::RULE_UPDATE => [],
    ];
 }
