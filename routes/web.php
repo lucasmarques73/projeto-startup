@@ -25,3 +25,8 @@ Route::get('/parcelas/pdf', function(){
   $pdf = PDF::loadView('parcelas.pdf.pdf',['parcelas' => $parcelas]);
   return $pdf->download('parcelas.pdf');
 });
+Route::get('/movimentos/{movimento_id}/pdf', function(){
+  $parcelas = App\Entities\Parcela::findWhere(['movimento_id' => $movimento_id]);
+  $pdf = PDF::loadView('parcelas.pdf.pdf',['parcelas' => $parcelas]);
+  return $pdf->download('parcelas.pdf');
+});

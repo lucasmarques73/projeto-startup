@@ -127,7 +127,8 @@ class ParcelasController extends Controller
             'data'    => $parcela->toArray(),
         ];
 
-        return redirect()->route('parcelas.index');
+        // return redirect()->route('parcelas.index');
+        return redirect()->back()->with('message', $response['message']);
     }
 
 
