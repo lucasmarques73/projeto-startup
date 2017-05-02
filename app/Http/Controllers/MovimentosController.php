@@ -5,8 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
-use Prettus\Validator\Contracts\ValidatorInterface;
-use Prettus\Validator\Exceptions\ValidatorException;
 use App\Http\Requests\MovimentoCreateRequest;
 use App\Http\Requests\MovimentoUpdateRequest;
 use App\Repositories\MovimentoRepository;
@@ -57,20 +55,9 @@ class MovimentosController extends Controller
 
     public function create()
     {
-      // $movimentos = $this->repository->all();
-      //
-      // return view('movimentos.form-movimento', ['movimentos' => $movimentos]);
-
       return view ('movimentos.form-movimento');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  MovimentoCreateRequest $request
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function store(MovimentoCreateRequest $request)
     {
         return $this->service->store($request->all());
@@ -125,42 +112,13 @@ class MovimentosController extends Controller
      */
     public function update(MovimentoUpdateRequest $request, $id)
     {
-
-        try {
-
-            $this->validator->with($request->all())->passesOrFail(ValidatorInterface::RULE_UPDATE);
-
-            $movimento = $this->repository->update($request->all(), $id);
-
-            $response = [
-                'message' => 'Movimento updated.',
-                'data'    => $movimento->toArray(),
-            ];
-
-            if ($request->wantsJson()) {
-
-                return response()->json($response);
-            }
-
-            return redirect()->back()->with('message', $response['message']);
-        } catch (ValidatorException $e) {
-
-            if ($request->wantsJson()) {
-
-                return response()->json([
-                    'error'   => true,
-                    'message' => $e->getMessageBag()
-                ]);
-            }
-
-            return redirect()->back()->withErrors($e->getMessageBag())->withInput();
-        }
+        return $this->service->update($data, $id);
     }
 
 
     /**
      * Remove the specified resource from storage.
-     *
+     *update($data, $id)
      * @param  int $id
      *
      * @return \Illuminate\Http\Response

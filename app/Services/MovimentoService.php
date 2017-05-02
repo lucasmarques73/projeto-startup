@@ -32,7 +32,6 @@ class MovimentoService
 
     public function store(array $data)
     {
-
         try {
 
             $this->validator->with($data)->passesOrFail(ValidatorInterface::RULE_CREATE);
@@ -63,6 +62,27 @@ class MovimentoService
         } catch (ValidatorException $e) {
 
             return redirect()->back()->with(['message' => $e->getMessageBag()])->withInput();
+        }
+    }
+
+    public function update(array $data, $id)
+    {
+
+        try {
+
+            $this->validator->with($data)->passesOrFail(ValidatorInterface::RULE_UPDATE);
+
+            $movimento = $this->repository->update($data, $id);
+
+            $response = [
+                'message' => 'Movimento updated.',
+                'data'    => $movimento->toArray(),
+            ];
+
+            return redirect()->back()->with('message', $response['message']);
+        } catch (ValidatorException $e) {
+
+            return redirect()->back()->withErrors($e->getMessageBag())->withInput();
         }
     }
 }

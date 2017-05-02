@@ -5,14 +5,12 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
-use Prettus\Validator\Contracts\ValidatorInterface;
-use Prettus\Validator\Exceptions\ValidatorException;
 use App\Http\Requests\ParcelaCreateRequest;
 use App\Http\Requests\ParcelaUpdateRequest;
 use App\Repositories\ParcelaRepository;
-use App\Validators\ParcelaValidator;
 
 use App\Repositories\MovimentoRepository;
+use App\Services\ParcelaService;
 
 
 class ParcelasController extends Controller
@@ -24,17 +22,20 @@ class ParcelasController extends Controller
     protected $repository;
 
     /**
-     * @var ParcelaValidator
+     * @var MovimentoRepository
      */
-    protected $validator;
-
     protected $MovimentoRepository;
 
-    public function __construct(ParcelaRepository $repository,MovimentoRepository $MovimentoRepository, ParcelaValidator $validator)
+    /**
+     * @var ParcelaService
+     */
+     protected $service;
+
+    public function __construct(ParcelaRepository $repository, MovimentoRepository $MovimentoRepository, ParcelaService $service)
     {
         $this->repository = $repository;
-        $this->validator  = $validator;
-        $this->MovimentoRepository  = $MovimentoRepository;
+        $this->service = $service;
+        $this->MovimentoRepository = $MovimentoRepository;
     }
 
 
@@ -74,33 +75,7 @@ class ParcelasController extends Controller
      */
     public function store(ParcelaCreateRequest $request)
     {
-        try {
-
-            $this->validator->with($request->all())->passesOrFail(ValidatorInterface::RULE_CREATE);
-
-            $parcela = $this->repository->create($request->all());
-
-            $response = [
-                'message' => 'Parcela created.',
-                'data'    => $parcela->toArray(),
-            ];
-
-            if ($request->wantsJson()) {
-
-                return response()->json($response);
-            }
-
-            return redirect()->back()->with('message', $response['message']);
-        } catch (ValidatorException $e) {
-            if ($request->wantsJson()) {
-                return response()->json([
-                    'error'   => true,
-                    'message' => $e->getMessageBag()
-                ]);
-            }
-
-            return redirect()->back()->withErrors($e->getMessageBag())->withInput();
-        }
+        return $this->service->store($request->all());
     }
 
 
@@ -139,8 +114,6 @@ class ParcelasController extends Controller
       $parcela = $this->repository->find($id);
 
       return view('parcelas.form-parcela', ['movimentos' => $movimentos, 'parcela' => $parcela]);
-
-
     }
 
 
@@ -164,46 +137,10 @@ class ParcelasController extends Controller
         return redirect()->route('parcelas.index');
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  ParcelaUpdateRequest $request
-     * @param  string            $id
-     *
-     * @return Response
-     */
+
     public function update(ParcelaUpdateRequest $request, $id)
     {
-
-        try {
-
-            $this->validator->with($request->all())->passesOrFail(ValidatorInterface::RULE_UPDATE);
-
-            $parcela = $this->repository->update($request->all(), $id);
-
-            $response = [
-                'message' => 'Parcela updated.',
-                'data'    => $parcela->toArray(),
-            ];
-
-            if ($request->wantsJson()) {
-
-                return response()->json($response);
-            }
-
-            return redirect()->back()->with('message', $response['message']);
-        } catch (ValidatorException $e) {
-
-            if ($request->wantsJson()) {
-
-                return response()->json([
-                    'error'   => true,
-                    'message' => $e->getMessageBag()
-                ]);
-            }
-
-            return redirect()->back()->withErrors($e->getMessageBag())->withInput();
-        }
+        return $this->service->update($request->all(), $id);
     }
 
 
