@@ -33,7 +33,7 @@
                   {!! Form::input('number', 'valor_total', null, ['class' => 'form-control', 'placeholder' => 'Valor Total'])!!}
 
                   {!! Form::label('numero_parcela', 'Número de Parcelas') !!}
-                  {!! Form::selectRange('number', 1, 5, 1, ['class' => 'form-control']) !!}
+                  {!! Form::selectRange('numero_parcela', 1, 5, 1, ['class' => 'form-control']) !!}
 
                   {!! Form::submit('Salvar', ['class' => 'btn btn-primary'])!!}
 

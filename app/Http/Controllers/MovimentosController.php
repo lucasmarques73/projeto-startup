@@ -10,9 +10,8 @@ use Prettus\Validator\Exceptions\ValidatorException;
 use App\Http\Requests\MovimentoCreateRequest;
 use App\Http\Requests\MovimentoUpdateRequest;
 use App\Repositories\MovimentoRepository;
-use App\Validators\MovimentoValidator;
 
-use App\Repositories\ParcelaRepository;
+use App\Services\MovimentoService;
 
 
 class MovimentosController extends Controller
@@ -24,17 +23,15 @@ class MovimentosController extends Controller
     protected $repository;
 
     /**
-     * @var MovimentoValidator
+     * @var MovimentoService
      */
-    protected $validator;
+     protected $service;
 
-    protected $Parcelarepository;
 
-    public function __construct(MovimentoRepository $repository,ParcelaRepository $Parcelarepository, MovimentoValidator $validator)
+    public function __construct(MovimentoRepository $repository, MovimentoService $service)
     {
         $this->repository = $repository;
-        $this->validator  = $validator;
-        $this->Parcelarepository  = $Parcelarepository;
+        $this->service = $service;
     }
 
 
@@ -76,55 +73,7 @@ class MovimentosController extends Controller
      */
     public function store(MovimentoCreateRequest $request)
     {
-
-        try {
-
-            $this->validator->with($request->all())->passesOrFail(ValidatorInterface::RULE_CREATE);
-
-            $movimento = $this->repository->create($request->all());
-            $valor_parcela = $request->get('valor_total') / $request->get('numero_parcela');
-
-            /**
-            *   $data = date('Y-m-d', strtotime("+1 month", strtotime($data)));
-            *
-            *   Adionando 1 mês para data;
-            **/
-            $data_emissao = $request->get('data_emissao');
-
-            for ($i = 1; $i <= $request->get('numero_parcela'); $i++) {
-
-                $data_vencimento = date('Y-m-d', strtotime("+" . $i . " month", strtotime($data_emissao)));
-
-                $parcela = $this->Parcelarepository->create([
-                  'movimento_id' => $movimento['id'],
-                  'numero_parcela'      => $i              ,
-                  'valor_parcela'       => $valor_parcela  ,
-                  'status'              => 'à pagar'       ,
-                  'data_vencimento'     => $data_vencimento
-                ]);
-            }
-
-            $response = [
-                'message' => 'Movimento created.',
-                'data'    => $movimento->toArray(),
-            ];
-
-            if ($request->wantsJson()) {
-
-                return response()->json($response);
-            }
-
-            return redirect()->back()->with('message', $response['message']);
-        } catch (ValidatorException $e) {
-            if ($request->wantsJson()) {
-                return response()->json([
-                    'error'   => true,
-                    'message' => $e->getMessageBag()
-                ]);
-            }
-
-            return redirect()->back()->with(['message' => $e->getMessageBag()])->withInput();
-        }
+        return $this->service->store($request->all());
     }
 
 
