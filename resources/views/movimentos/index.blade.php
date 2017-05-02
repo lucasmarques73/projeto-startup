@@ -20,14 +20,14 @@
                       <th>Opções</th>
                     </thead>
                     <tbody>
-                      @foreach($movimentos as $movimentacao)
+                      @foreach($movimentos as $movimento)
                       <tr>
-                        <td>{{$movimentacao->tipo}}</td>
-                        <td>{{$movimentacao->categoria}}</td>
-                        <td>{{$movimentacao->descricao}}</td>
-                        <td>{{$movimentacao->data_emissao}}</td>
+                        <td>{{$movimento->tipo}}</td>
+                        <td>{{$movimento->categoria}}</td>
+                        <td>{{$movimento->descricao}}</td>
+                        <td>{{$movimento->data_emissao}}</td>
                         <td>
-                        @foreach ($movimentacao->Parcela as $parcela)
+                        @foreach ($movimento->Parcela as $parcela)
                           {{$parcela->numero_parcela}}: {{$parcela->status}}
                         @endforeach
                         </td>

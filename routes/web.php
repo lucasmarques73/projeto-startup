@@ -19,7 +19,6 @@ Route::put('/parcelas/{id}/pagar', ['as' => 'parcelas.pagar', 'uses' => 'Parcela
 //Parcelas PDF
 Route::get('/parcelas/pdf', function(){
   $parcelas = App\Entities\Parcela::all();
-  $pdf = PDF::loadView('parcelas.pdf',['parcelas' => $parcelas]);
-  $pdf = PDF::loadView('parcelas.pdf',['parcelas' => $parcelas]);
+  $pdf = PDF::loadView('parcelas.pdf.pdf',['parcelas' => $parcelas]);
   return $pdf->download('parcelas.pdf');
 });
