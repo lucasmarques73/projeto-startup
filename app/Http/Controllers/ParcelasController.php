@@ -86,18 +86,11 @@ class ParcelasController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($movimento_id)
     {
-        $parcela = $this->repository->find($id);
+        $parcelas = $this->repository->findWhere(['movimento_id' => $movimento_id]);
 
-        if (request()->wantsJson()) {
-
-            return response()->json([
-                'data' => $parcela,
-            ]);
-        }
-
-        return view('parcelas.show', compact('parcela'));
+        return view('parcelas.index', ['parcelas' => $parcelas]);
     }
 
 
