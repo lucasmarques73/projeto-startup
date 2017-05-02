@@ -31,7 +31,11 @@
                           {{$parcela->numero_parcela}}: {{$parcela->status}}
                         @endforeach
                         </td>
-                        <td></td>
+                        <td>
+                            {!! Form::open(['route' => ['movimentos.parcela', $movimento->id], 'method' => 'get']) !!}
+                            {!! Form::submit('Parcelas', ['class' => 'btn btn-info']) !!}
+                            {!! Form::close() !!}
+                        </td>
                       </tr>
                     @endforeach
                     </tbody>
