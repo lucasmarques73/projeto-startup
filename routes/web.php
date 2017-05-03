@@ -6,6 +6,7 @@ Route::post('/movimentos',['as' => 'movimentos.salvar', 'uses' => 'MovimentosCon
 Route::get('/movimentos/novo', ['as' => 'movimentos.novo', 'uses' => 'MovimentosController@create']);
 
 Route::get('/movimentos/{movimento_id}/parcelas',['as' => 'movimentos.parcela', 'uses' => 'ParcelasController@show']);
+Route::get('/movimentos/{movimento_id}/parcelas/{status}',['as' => 'movimentos.parcela.pago', 'uses' => 'ParcelasController@showStatus']);
 
 // Rotas das Parcelas
 Route::get('/parcelas', ['as' => 'parcelas.index' , 'uses' => 'ParcelasController@index']);

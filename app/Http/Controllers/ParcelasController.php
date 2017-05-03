@@ -92,6 +92,12 @@ class ParcelasController extends Controller
 
         return view('parcelas.index', ['parcelas' => $parcelas]);
     }
+    public function showStatus($movimento_id, $status)
+    {
+        $parcelas = $this->repository->findWhere(['movimento_id' => $movimento_id, 'status' => $status]);
+
+        return view('parcelas.index', ['parcelas' => $parcelas]);
+    }
 
 
     /**
@@ -127,7 +133,6 @@ class ParcelasController extends Controller
             'data'    => $parcela->toArray(),
         ];
 
-        // return redirect()->route('parcelas.index');
         return redirect()->back()->with('message', $response['message']);
     }
 
