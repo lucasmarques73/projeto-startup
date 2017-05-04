@@ -41,7 +41,7 @@ class MovimentosController extends Controller
     public function index()
     {
         $this->repository->pushCriteria(app('Prettus\Repository\Criteria\RequestCriteria'));
-        $movimentos = $this->repository->all();
+        $movimentos = $this->repository->paginate(5);
 
         if (request()->wantsJson()) {
 

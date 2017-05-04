@@ -47,7 +47,9 @@
                     @endforeach
                     </tbody>
                   </table>
-
+                  <div class="pagination-bar text-center">
+                      {{$parcelas->links()}}
+                  </div>
             </div>
         </div>
     </div>

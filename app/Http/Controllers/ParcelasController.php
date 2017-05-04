@@ -47,7 +47,7 @@ class ParcelasController extends Controller
     public function index()
     {
         $this->repository->pushCriteria(app('Prettus\Repository\Criteria\RequestCriteria'));
-        $parcelas = $this->repository->all();
+        $parcelas = $this->repository->paginate(6);
 
         if (request()->wantsJson()) {
 

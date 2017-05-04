@@ -40,7 +40,9 @@
                     @endforeach
                     </tbody>
                   </table>
-
+                  <div class="pagination-bar text-center">
+                      {{$movimentos->links()}}
+                  </div>
             </div>
         </div>
     </div>
