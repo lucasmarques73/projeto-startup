@@ -12,7 +12,6 @@ use App\Repositories\ParcelaRepository;
 use App\Repositories\MovimentoRepository;
 use App\Services\ParcelaService;
 
-
 class ParcelasController extends Controller
 {
 
@@ -57,6 +56,20 @@ class ParcelasController extends Controller
         }
 
         return view('parcelas.index', ['parcelas' => $parcelas]);
+    }
+
+    public function report()
+    {
+        $parcelas = $this->repository->all();
+        $pdf = \PDF::loadView('parcelas.pdf.pdf',['parcelas' => $parcelas]);
+        return $pdf->stream('parcelas.pdf');
+    }
+
+    public function reportParcela($movimento_id)
+    {
+        $parcelas = $this->repository->findWhere(['movimento_id' => $movimento_id]);
+        $pdf = \PDF::loadView('parcelas.pdf.pdf',['parcelas' => $parcelas]);
+        return $pdf->stream('parcelas.pdf');
     }
 
     public function create()
@@ -141,7 +154,6 @@ class ParcelasController extends Controller
     {
         return $this->service->update($request->all(), $id);
     }
-
 
     /**
      * Remove the specified resource from storage.

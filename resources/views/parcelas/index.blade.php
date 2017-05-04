@@ -7,7 +7,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                   Parcelas
-                  <a class="btn btn-danger" href="{{url('parcelas/pdf')}}">PDF</a>
+                  <a class="btn btn-danger" href="{{route('parcelas.report')}}">PDF</a>
                   <a class="pull-right" href="{{route('parcelas.novo')}}">Novo Parcela</a>
                 </div>
 
@@ -42,13 +42,13 @@
                             $(this).sibilings('form').addClass('show');
                           }) --}}
                           <!--<button class="btn btn-success" data-toggle="modal" data-target="#myModal">Pagar</button></td> -->
-                        <td><a href="parcelas/{{ $parcela->id }}/editar" class="btn btn-warning">Editar</a></td>
+                        <td><a href="{{ route('parcelas.edit',$parcela->id)}}" class="btn btn-warning">Editar</a></td>
                       </tr>
                     @endforeach
                     </tbody>
                   </table>
                   <div class="pagination-bar text-center">
-                      {{$parcelas->links()}}
+                      {{$parcelas->render()}}
                   </div>
             </div>
         </div>
