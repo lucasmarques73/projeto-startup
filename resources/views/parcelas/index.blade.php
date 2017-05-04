@@ -8,7 +8,7 @@
                 <div class="panel-heading">
                   Parcelas
                   <a class="btn btn-danger" href="{{url('parcelas/pdf')}}">PDF</a>
-                  <a class="pull-right" href="{{url('parcelas/novo')}}">Novo Parcela</a>
+                  <a class="pull-right" href="{{route('parcelas.novo')}}">Novo Parcela</a>
                 </div>
 
                 <table class="table">

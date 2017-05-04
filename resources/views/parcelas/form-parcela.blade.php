@@ -7,7 +7,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                   Dados da Parcela
-                  <a class="pull-right" href="{{url('parcelas')}}">Lista de Parcelas</a>
+                  <a class="pull-right" href="{{route('parcelas.index')}}">Lista de Parcelas</a>
                 </div>
                 <div class="panel-body">
                   @if(Session::has('message'))
@@ -16,7 +16,7 @@
 
 
                   @if(Request::is('*/editar'))
-                    {!! Form::model($parcela, ['method' => 'PATCH','url' => 'parcelas/'.$parcela->id])!!}
+                    {!! Form::model($parcela, ['method' => 'PATCH','route' => ['parcelas.edit', $parcela->id]])!!}
                   @else
                       {!! Form::open(['route' => 'parcelas.salvar', 'method' => 'POST']) !!}
                   @endif

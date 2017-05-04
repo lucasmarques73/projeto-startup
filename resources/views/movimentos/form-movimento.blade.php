@@ -7,7 +7,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                   Dados da Movimento
-                  <a class="pull-right" href="{{url('movimentos')}}">Lista de Movimentos</a>
+                  <a class="pull-right" href="{{route('movimentos.index')}}">Lista de Movimentos</a>
                 </div>
 
                 <div class="panel-body">
