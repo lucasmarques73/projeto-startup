@@ -21,27 +21,41 @@
                       {!! Form::open(['route' => 'parcelas.salvar', 'method' => 'POST']) !!}
                   @endif
 
-                  {!! Form::label('movimento_id', 'Movimentação') !!}
-                  {!! Form::select('movimento', $movimentos, null, ['class' => 'form-control']) !!}
+                  <div class="form-group">
+                      {!! Form::label('movimento_id', 'Movimentação') !!}
+                      {!! Form::select('movimento', $movimentos, null, ['class' => 'form-control']) !!}
+                  </div>
 
-                  {!! Form::label('status', 'Status') !!}
-                  {!! Form::select('status', ['à pagar' => 'à pagar', 'pago' => 'pago'], null,['class' => 'form-control']) !!}
+                  <div class="form-group">
+                      {!! Form::label('status', 'Status') !!}
+                      {!! Form::select('status', ['à pagar' => 'à pagar', 'pago' => 'pago'], null,['class' => 'form-control']) !!}
+                  </div>
 
-                  {!! Form::label('numero_parcela', 'Número da Parcela') !!}
-                  {!! Form::input('number', 'numero_parcela', null, ['class' => 'form-control', 'placeholder' => 'Número da Parcela'])!!}
+                  <div class="form-group">
+                      {!! Form::label('numero_parcela', 'Número da Parcela') !!}
+                      {!! Form::input('number', 'numero_parcela', null, ['class' => 'form-control', 'placeholder' => 'Número da Parcela']) !!}
+                  </div>
 
-                  {!! Form::label('data_vencimento', 'Data de Vencimento') !!}
-                  {!! Form::input('date', 'data_vencimento', null, ['class' => 'form-control'])!!}
+                  <div class="form-group">
+                      {!! Form::label('data_vencimento', 'Data de Vencimento') !!}
+                      {!! Form::input('date', 'data_vencimento', null, ['class' => 'form-control']) !!}
+                  </div>
 
-                  {!! Form::label('data_pagamento', 'Data de Pagamento') !!}
-                  {!! Form::input('date', 'data_pagamento', null, ['class' => 'form-control'])!!}
+                  <div class="form-group">
+                      {!! Form::label('data_pagamento', 'Data de Pagamento') !!}
+                      {!! Form::input('date', 'data_pagamento', null, ['class' => 'form-control'])!!}
+                  </div>
 
-                  {!! Form::label('valor_parcela', 'Valor da Parcela') !!}
-                  {!! Form::input('number', 'valor_parcela', null, ['class' => 'form-control'])!!}
+                  <div class="form-group">
+                      {!! Form::label('valor_parcela', 'Valor da Parcela') !!}
+                      {!! Form::input('number', 'valor_parcela', null, ['class' => 'form-control'])!!}
+                  </div>
 
-                  {!! Form::label('valor_pago', 'Valor Pago') !!}
-                  {!! Form::input('number', 'valor_pago', null, ['class' => 'form-control'])!!}
-
+                  <div class="form-group">
+                      {!! Form::label('valor_pago', 'Valor Pago') !!}
+                      {!! Form::input('number', 'valor_pago', null, ['class' => 'form-control'])!!}
+                  </div>
+                  
                   {!! Form::submit('Salvar', ['class' => 'btn btn-primary'])!!}
 
                   {!! Form::close() !!}
