@@ -14,11 +14,10 @@
                     <div class='alert '>{{Session::get('message')}}</div>
                   @endif
 
-
-                  @if(Request::is('*/editar'))
-                    {!! Form::model($parcela, ['method' => 'PATCH','route' => ['parcelas.edit', $parcela->id]])!!}
-                  @else
+                  @if(Request::is('*/novo'))
                       {!! Form::open(['route' => 'parcelas.salvar', 'method' => 'POST']) !!}
+                  @else
+                      {!! Form::model($parcela, ['method' => 'PATCH','route' => ['parcelas.edit', $parcela->id]])!!}
                   @endif
 
                   <div class="form-group">
@@ -55,7 +54,7 @@
                       {!! Form::label('valor_pago', 'Valor Pago') !!}
                       {!! Form::input('number', 'valor_pago', null, ['class' => 'form-control'])!!}
                   </div>
-                  
+
                   {!! Form::submit('Salvar', ['class' => 'btn btn-primary'])!!}
 
                   {!! Form::close() !!}
