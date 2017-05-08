@@ -8,11 +8,14 @@
                 <div class="panel-heading">
                   Parcelas
                   <a class="btn btn-danger" href="{{route('parcelas.report')}}">PDF</a>
+                  <a href="{{Request::url()}}?search=pago" class="btn btn-default"> Pagos</a>
+                  <a href="{{Request::url()}}?search=à pagar" class="btn btn-default"> à Pagar</a>
                   <a class="pull-right" href="{{route('parcelas.novo')}}">Novo Parcela</a>
                 </div>
 
                 <table class="table">
                     <thead>
+                      <th>#</th>
                       <th>Movimentação</th>
                       <th>Status</th>
                       <th>Número da Parcela</th>
@@ -26,23 +29,27 @@
                     <tbody>
                       @foreach($parcelas as $parcela)
                       <tr>
-                        <td>{{$parcela->movimento_id}}: {{ $parcela->Movimento->descricao }}</td>
-                        <td>{{$parcela->status}}</td>
-                        <td>{{$parcela->numero_parcela}}</td>
-                        <td>{{$parcela->data_vencimento}}</td>
-                        <td>{{$parcela->data_pagamento}}</td>
-                        <td>{{$parcela->valor_parcela}}</td>
-                        <td>{{$parcela->valor_pago}}</td>
-                        <td>
-                          {!! Form::open(['route' => ['parcelas.pagar', $parcela->id], 'method' => 'put']) !!}
-                          {!! Form::submit('pagar', ['class' => 'btn btn-success']) !!}
-                          {!! Form::close() !!}
-                          {{--
-                          $('*['data-toggle="modal"']').click(function(){
-                            $(this).sibilings('form').addClass('show');
-                          }) --}}
-                          <!--<button class="btn btn-success" data-toggle="modal" data-target="#myModal">Pagar</button></td> -->
-                        <td><a href="{{ route('parcelas.edit',$parcela->id)}}" class="btn btn-warning">Editar</a></td>
+                          <td>{{ $parcela->id }} </td>
+                          <td>{{$parcela->movimento_id}}: {{ $parcela->Movimento->descricao }}</td>
+                          <td>{{$parcela->status}}</td>
+                          <td>{{$parcela->numero_parcela}}</td>
+                            <td>{{$parcela->data_vencimento}}</td>
+                            <td>{{$parcela->data_pagamento}}</td>
+                            <td>{{$parcela->valor_parcela}}</td>
+                            <td>{{$parcela->valor_pago}}</td>
+                            <td>
+                                {!! Form::open(['route' => ['parcelas.pagar', $parcela->id], 'method' => 'put']) !!}
+                                {!! Form::submit('pagar', ['class' => 'btn btn-success']) !!}
+                                {!! Form::close() !!}
+                            </td>
+                            <td>
+                                {{--
+                                $('*['data-toggle="modal"']').click(function(){
+                                $(this).sibilings('form').addClass('show');
+                                }) --}}
+                                <!--<button class="btn btn-success" data-toggle="modal" data-target="#myModal">Pagar</button></td> -->
+                                <a href="{{ route('parcelas.edit',$parcela->id)}}" class="btn btn-warning">Editar</a>
+                            </td>
                       </tr>
                     @endforeach
                     </tbody>
