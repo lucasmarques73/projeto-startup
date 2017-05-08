@@ -101,17 +101,12 @@ class ParcelasController extends Controller
      */
     public function show($movimento_id)
     {
-        $parcelas = $this->repository->findWhere(['movimento_id' => $movimento_id]);
+        $parcelas = $this->repository->scopeQuery(function ($query) use($movimento_id){
+            return $query->where(['movimento_id' => $movimento_id]);
+        })->paginate(3);
 
-        return view('parcelas.index', ['parcelas' => $parcelas]);
+        return view('parcelas.index', ['parcelas' => $parcelas ,'movimento_id' => $movimento_id]);
     }
-    public function showStatus($movimento_id, $status)
-    {
-        $parcelas = $this->repository->findWhere(['movimento_id' => $movimento_id, 'status' => $status]);
-
-        return view('parcelas.index', ['parcelas' => $parcelas]);
-    }
-
 
     /**
      * Show the form for editing the specified resource.
