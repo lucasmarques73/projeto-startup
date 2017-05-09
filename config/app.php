@@ -182,6 +182,7 @@ return [
         Prettus\Repository\Providers\RepositoryServiceProvider::class,
         Collective\Html\HtmlServiceProvider::class,
         Barryvdh\DomPDF\ServiceProvider::class,
+        Laravel\Passport\PassportServiceProvider::class,
 
     ],
 
