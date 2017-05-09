@@ -8,8 +8,8 @@
                 <div class="panel-heading">
                   Parcelas
                   <a class="btn btn-danger" href="{{route('parcelas.report')}}">PDF</a>
-                  <a href="{{Request::url()}}?search=pago" class="btn btn-default"> Pagos</a>
-                  <a href="{{Request::url()}}?search=à pagar" class="btn btn-default"> à Pagar</a>
+                  <a href="{{Request::url()}}?search=status:pago" class="btn btn-default"> Pagos</a>
+                  <a href="{{Request::url()}}?search=status:à pagar" class="btn btn-default"> à Pagar</a>
                   <a class="pull-right" href="{{route('parcelas.novo')}}">Novo Parcela</a>
                 </div>
 
