@@ -6,11 +6,18 @@
         <div class="col-md-10 col-md-offset-1">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                  Parcelas
-                  <a class="btn btn-danger" href="{{route('parcelas.report')}}">PDF</a>
-                  <a href="{{Request::url()}}?search=status:pago" class="btn btn-default"> Pagos</a>
-                  <a href="{{Request::url()}}?search=status:à pagar" class="btn btn-default"> à Pagar</a>
-                  <a class="pull-right" href="{{route('parcelas.novo')}}">Novo Parcela</a>
+                         Parcelas
+                        <a class="btn btn-danger" href="{{route('parcelas.report')}}">PDF</a>
+                        <a href="{{Request::url()}}?search=status:pago" class="btn btn-default"> Pagos</a>
+                        <a href="{{Request::url()}}?search=status:à pagar" class="btn btn-default"> à Pagar</a>
+                        <a class="pull-right" href="{{route('parcelas.novo')}}">Novo Parcela</a>
+                </div>
+                <div class="panel-heading">
+
+                    {!! Form::open(['route' => 'parcelas.index', 'method' => 'get', 'class' => 'form-inline']) !!}
+                    {!! Form::input('search', 'search', null, ['class' => 'form-control']) !!}
+                    {!! Form::submit('Buscar', ['class' => 'btn btn-primary'])!!}
+                    {!! Form::close() !!}
                 </div>
 
                 <table class="table">
