@@ -15,6 +15,7 @@ Route::group(['middleware' => 'auth'], function () {
 
     // Rotas das Parcelas
     Route::get('/parcelas', ['as' => 'parcelas.index' , 'uses' => 'ParcelasController@index']);
+    //Route::get('/parcelas/between', ['as' => 'parcelas.between' , 'uses' => 'ParcelasController@between']);
     Route::post('/parcelas', ['as' => 'parcelas.salvar', 'uses' => 'ParcelasController@store']);
     Route::put('/parcelas', ['as' => 'parcelas.salvar', 'uses' => 'ParcelasController@update']);
     Route::get('/parcelas/novo', ['as' => 'parcelas.novo', 'uses' => 'ParcelasController@create']);
