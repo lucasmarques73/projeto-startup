@@ -108,6 +108,17 @@ class ParcelasController extends Controller
         return view('parcelas.index', ['parcelas' => $parcelas ,'movimento_id' => $movimento_id]);
     }
 
+    public function between(Request $request)
+    {
+        $val = $request;
+        
+        $parcelas = $this->repository->scopeQuery(function ($query) use ($val){
+            return $query->whereBetween('valor_parcela', $val);
+        })->paginate(3);
+
+        return view('parcelas.index', ['parcelas' => $parcelas]);
+    }
+
     /**
      * Show the form for editing the specified resource.
      *
