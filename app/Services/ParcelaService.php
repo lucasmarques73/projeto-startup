@@ -34,8 +34,6 @@ class ParcelaService
     {
         try {
 
-            $this->validator->with($data)->passesOrFail(ValidatorInterface::RULE_CREATE);
-
             $parcela = $this->repository->create($data);
 
             $response = [
@@ -43,7 +41,7 @@ class ParcelaService
                 'data'    => $parcela->toArray(),
             ];
 
-            return redirect()->back()->with('message', $response['message']);
+            return $response;
         } catch (ValidatorException $e) {
             return redirect()->back()->withErrors($e->getMessageBag())->withInput();
         }
@@ -61,7 +59,7 @@ class ParcelaService
                 'message' => 'Parcela updated.',
                 'data'    => $parcela->toArray(),
             ];
-            return redirect()->back()->with('message', $response['message']);
+            return $response;
         } catch (ValidatorException $e) {
             return redirect()->back()->withErrors($e->getMessageBag())->withInput();
         }

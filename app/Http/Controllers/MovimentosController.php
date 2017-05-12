@@ -60,7 +60,9 @@ class MovimentosController extends Controller
 
     public function store(MovimentoCreateRequest $request)
     {
-        return $this->service->store($request->all());
+        $response =  $this->service->store($request->all());
+
+        return redirect()->back()->with('message', $response['message']);
     }
 
 
@@ -112,7 +114,9 @@ class MovimentosController extends Controller
      */
     public function update(MovimentoUpdateRequest $request, $id)
     {
-        return $this->service->update($data, $id);
+        $response = $this->service->update($data, $id);
+
+        return redirect()->back()->with('message', $response['message']);
     }
 
 

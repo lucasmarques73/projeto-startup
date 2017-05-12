@@ -58,7 +58,7 @@ class MovimentoService
                 'data'    => $movimento->toArray(),
             ];
 
-            return redirect()->back()->with('message', $response['message']);
+            return $response;
         } catch (ValidatorException $e) {
 
             return redirect()->back()->with(['message' => $e->getMessageBag()])->withInput();
@@ -79,7 +79,7 @@ class MovimentoService
                 'data'    => $movimento->toArray(),
             ];
 
-            return redirect()->back()->with('message', $response['message']);
+            return $response;
         } catch (ValidatorException $e) {
 
             return redirect()->back()->withErrors($e->getMessageBag())->withInput();

@@ -88,7 +88,10 @@ class ParcelasController extends Controller
      */
     public function store(ParcelaCreateRequest $request)
     {
-        return $this->service->store($request->all());
+        $response = $this->service->store($request->all());
+        
+
+        return redirect()->back()->with('message', $response['message']);
     }
 
 
@@ -107,7 +110,7 @@ class ParcelasController extends Controller
 
         return view('parcelas.index', ['parcelas' => $parcelas ,'movimento_id' => $movimento_id]);
     }
-
+ 
     public function between(Request $request)
     {
         $val = $request;
@@ -118,12 +121,12 @@ class ParcelasController extends Controller
 
         return view('parcelas.index', ['parcelas' => $parcelas]);
     }
-
+   
     /**
      * Show the form for editing the specified resource.
      *
      * @param  int $id
-     *
+     *t
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -158,7 +161,9 @@ class ParcelasController extends Controller
 
     public function update(ParcelaUpdateRequest $request, $id)
     {
-        return $this->service->update($request->all(), $id);
+        $response =  $this->service->update($request->all(), $id);
+
+        return redirect()->back()->with('message', $response['message']);
     }
 
     /**
