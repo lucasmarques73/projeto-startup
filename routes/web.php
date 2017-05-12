@@ -27,6 +27,20 @@ Route::group(['middleware' => 'auth'], function () {
     Route::put('/parcelas/{id}/pagar', ['as' => 'parcelas.pagar', 'uses' => 'ParcelasController@registrarPagamento']);
 
 
-
     Route::get('/home', 'HomeController@index');
 });
+
+Route::post('oauth/access_token', function(){
+    return Response::json(Authorize::issueAccessToken());
+});
+
+// Route::get('/api', function(){
+//     return [
+//         'id' => 1,
+//         'name' => 'teste'
+//     ];
+// })->middleware('auth:api');
+
+Route::get('importExport', 'MaatwebsiteDemoController@importExport');
+Route::get('downloadExcel/{type}', 'MaatwebsiteDemoController@downloadExcel');
+Route::post('importExcel', 'MaatwebsiteDemoController@importExcel');
