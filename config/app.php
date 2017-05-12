@@ -183,7 +183,7 @@ return [
         Collective\Html\HtmlServiceProvider::class,
         Barryvdh\DomPDF\ServiceProvider::class,
         Laravel\Passport\PassportServiceProvider::class,
-        Maatwebsite\Excel\ExcelServiceProvider::class',
+        Maatwebsite\Excel\ExcelServiceProvider::class,
 
     ],
 
