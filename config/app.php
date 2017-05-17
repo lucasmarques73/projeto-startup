@@ -184,6 +184,7 @@ return [
         Barryvdh\DomPDF\ServiceProvider::class,
         Laravel\Passport\PassportServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
+        
 
     ],
 
