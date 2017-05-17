@@ -42,5 +42,10 @@ Route::post('oauth/access_token', function(){
 // })->middleware('auth:api');
 
 Route::get('importExport', 'MaatwebsiteDemoController@importExport');
-Route::get('downloadExcel/{type}', 'MaatwebsiteDemoController@downloadExcel');
-Route::post('importExcel', 'MaatwebsiteDemoController@importExcel');
+Route::post('importAss', 'MaatwebsiteDemoController@importAss');
+Route::post('importAssEnd', 'MaatwebsiteDemoController@importAssEnd');
+Route::post('importVec', 'MaatwebsiteDemoController@importVec');
+
+Route::get('info', function(){
+    phpinfo();
+});
