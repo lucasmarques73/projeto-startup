@@ -45,6 +45,6 @@ class CreateAuxAssociadosTable extends Migration
      */
     public function down()
     {
-        //
+        Schema::dropIfExists('aux_associados');    
     }
 }
