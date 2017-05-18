@@ -10,6 +10,22 @@ use Excel;
 
 class MaatwebsiteDemoController extends Controller
 {
+	public static function limpaCPF_CNPJ($valor){
+	 $valor = trim($valor);
+	 $valor = str_replace(".", "", $valor);
+	 $valor = str_replace(",", "", $valor);
+	 $valor = str_replace("-", "", $valor);
+	 $valor = str_replace("/", "", $valor);
+	 return $valor;
+	}
+
+	public static function genero($sexo){
+		$sexo = str_replace("M", "1", $sexo);
+		$sexo = str_replace("F", "2", $sexo);
+		return $sexo;
+	}
+
+
     public function importExport()
 	{
 		return view('importExport');
@@ -26,41 +42,54 @@ class MaatwebsiteDemoController extends Controller
 			if(!empty($data) && $data->count()){
 				
 				foreach ($data as $key => $value) {
-					$insert[] = [
-					'Nome' => (string) $value->nome ,
-					'Matricula' => (string) $value->matricula ,
-					'Contato' => (string) $value->contato ,
-					'Id_Externo' => (string) $value->id_extero ,
-					'CPF_CNPJ' => (string) $value->cpfcnpj ,
-					'Classificacao' => (string) $value->classificacao ,
-					'CNH' => (string) $value->cnh ,
-					'RG' => (string) $value->rg ,
-					'Data_Nascimento' => (string) $value->data_nascimento ,
-					'Situacao' => (string) $value->situacao ,
-					'Data_Cadastro' => (string) $value->data_cadastro ,
-					'Data_Exclusao' => (string) $value->data_exclusao ,
-					'Data_Contrato' => (string) $value->data_contrato ,
-					'Categoria_CNH' => (string) $value->categoria_cnh ,
-					'Data_Vencimento' => (string) $value->data_vencimento_cnh ,
-					'Sexo' => (string) $value->sexo ,
-					'Hora_de_Cadastro' => (string) $value->hora_de_cadastro ,
-					'Hora_Exclusao' => (string) $value->hora_exclusao ,
-					'Data_Final_Contrato' => (string) $value->data_final_contrato
-					];
-				}
-				
-				if(!empty($insert)){
-					
-					foreach (array_chunk($insert,1000) as $i) {
-						DB::table('aux_associados')->insert($i);
+
+					$value->cpfcnpj = MaatwebsiteDemoController::limpaCPF_CNPJ($value->cpfcnpj);
+					$value->data_nascimento = str_replace("00/00/0000", null, $value->data_nascimento);
+					$value->data_nascimento = date('Y-m-d', strtotime($value->data_nascimento));
+					$value->sexo = MaatwebsiteDemoController::genero($value->sexo);
+
+					if (strlen($value->cpfcnpj) <= 11){
+						$pessoaFisica[] = [
+							'nome' => $value->nome ,					
+							'apelido' => $value->contato ,
+							'cpf' => (string) $value->cpfcnpj ,
+							'cnh' => (string) $value->cnh ,
+							'rg' => (string) $value->rg ,
+							'nascimento' =>  $value->data_nascimento ,
+							'cnh_categoria' => $value->categoria_cnh ,
+							'genero' => (integer) $value->sexo ,
+							'Matricula' => (string) $value->matricula ,
+							'Id_Externo' => (string) $value->id_extero ,
+							'Situacao' => (string) $value->situacao
+						];
+					}
+					else{
+						$pessoaJuridica[] = [
+							'cnpj' => $value->cpfcnpj ,
+							'razao_social' => $value->nome ,
+							'nome_fantasia' => $value->nome ,
+							'Matricula' => (string) $value->matricula ,
+							'Id_Externo' => (string) $value->id_extero ,
+							'Situacao' => (string) $value->situacao
+						];
 					}
 					
-					dd('<h1>Insert Record successfully.</h1>');
+				}
+				
+				if(!empty($pessoaFisica)){
+					
+					foreach (array_chunk($pessoaFisica,1000) as $pf) {
+						DB::table('pessoa_fisicas')->insert($pf);
+					}
+				}
+				if(!empty($pessoaJuridica)){
+					
+					foreach (array_chunk($pessoaJuridica,1000) as $pj) {
+						DB::table('pessoa_juridicas')->insert($pj);
+					}
+				}
 
-				}
-				else{
-					dd('Erro1');
-				}
+				dd('Dados inseridos nas tabelas pessoa_fisicas e pessoa_juridicas');
 			}
 			else{
 				dd('Erro2');
@@ -83,61 +112,54 @@ class MaatwebsiteDemoController extends Controller
 			if(!empty($data) && $data->count()){
 
 				foreach ($data as $key => $value) {
+
+					$value->receber_e_mail = str_replace("SIM","1" , $value->receber_e_mail);
+
 					$insert[] = [
-					'matricula' => (string) $value->matricula ,
-					'id_externo' => (string) $value->id_externo ,
-					'placas_ativas' => (string) $value->placas_ativas ,
-					'logradouro' => (string) $value->logradouro ,
-					'bairro' => (string) $value->bairro ,
-					'cidade' => (string) $value->cidade ,
+					'end_cep' => (string) $value->cep ,
+					'end_logradouro' => (string) $value->logradouro ,
+					'end_complemento' => (string) $value->complemento ,
+					'end_bairro' => (string) $value->bairro ,
+					'end_cidade' => (string) $value->cidade ,
+					'end_uf' => (string) $value->uf ,
+					'end_numero' => (string) $value->numero ,
+
+					'tel_preferencial' => (string) $value->telefone ,
+					'tel_alternativo' => (string) $value->telefone_celular ,					
+					
 					'email' => (string) $value->email ,
-					'regional' => (string) $value->regional ,
-					'naturalidade' => (string) $value->naturalidade ,
-					'telefone' => (string) $value->telefone ,
-					'telefone_celular' => (string) $value->telefone_celular ,
-					'id_radio' => (string) $value->id_radio ,
-					'numero_radio' => (string) $value->numero_radio ,
-					'data_alteracao_situacao' => (string) $value->data_alteracao_situacao ,
-					'cep' => (string) $value->cep ,
-					'numero' => (string) $value->numero ,
-					'complemento' => (string) $value->complemento ,
-					'email_auxiliar' => (string) $value->email_auxiliar ,
-					'uf' => (string) $value->uf ,
-					'usuario' => (string) $value->usuario ,
-					'telefone_comercial' => (string) $value->telefone_comercial ,
-					'telefone_celular_auxiliar' => (string) $value->telefone_celular_auxiliar ,
-					'id_radio_aux' => (string) $value->id_radio_aux ,
-					'telefone_fax' => (string) $value->telefone_fax ,
-					'tipo_boleto_veiculo' => (string) $value->tipo_boleto_veiculo ,
-					'mes_aniversario' => (string) $value->mes_aniversario ,
-					'observacoes' => (string) $value->observacoes ,
-					'tipo_pessoa' => (string) $value->tipo_pessoa ,
-					'numero_radio_aux' => (string) $value->numero_radio_aux ,
-					'operadora' => (string) $value->operadora ,
-					//'0' => (string) $value-> ,
-					'profissao' => (string) $value->profissao ,
-					'nome_do_pai' => (string) $value->nome_do_pai ,
-					'quantidade_veiculos' => (string) $value->quantidade_veiculos ,
-					'valor_produto_adicional' => (string) $value->valor_produto_adicional ,
-					'receber_e_mail' => (string) $value->receber_e_mail ,
-					'categoria' => (string) $value->categoria ,
-					'descricao_produto_adicional' => (string) $value->descricao_produto_adicional
+					'email_alternativo' => (string) $value->email_auxiliar ,
+					
+					
+					//'regional' => (string) $value->regional ,					
+					//'profissao' => (string) $value->profissao ,
+					
+					'pref_email' => (integer) $value->receber_e_mail,
+					'pref_sms' => 0,
+					'pref_boleto' => 0,
+
+					'Matricula' => (string) $value->matricula ,
+					'Id_Externo' => (string) $value->id_extero
 					];
-				}
+				}		
 				
 				
 				if(!empty($insert)){
 					foreach (array_chunk($insert,1000) as $i) {
-						
+
 						foreach ($i as $val) {
-							if (array_get($val, 'matricula') != "") {								
-								DB::table('aux_associados_end')->insert($val);
-					 		}	
+							$x = DB::table('pessoas')->where('Matricula', array_get($val,'Matricula'))->value('Matricula');
+							if ($x == null) {
+								if (array_get($val, 'Matricula') != "") {
+									DB::table('pessoas')->insert($val);
+			 					}
+							}
+								
 						}
 						
 					}
 					
-					dd('<h1>Insert Record successfully.</h1>');
+					dd('<h1>Dados inseridos tabela pessoas</h1>');
 
 				}
 				else{
