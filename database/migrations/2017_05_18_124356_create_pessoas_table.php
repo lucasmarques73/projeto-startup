@@ -24,7 +24,7 @@ class CreatePessoasTable extends Migration
             $table->string('end_numero');
             $table->string('tel_preferencial');
             $table->string('tel_alternativo');
-            $table->string('email');
+            $table->string('email_preferencial');
             $table->string('email_alternativo');
             $table->integer('pref_email');
             $table->integer('pref_sms');
