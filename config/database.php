@@ -41,11 +41,11 @@ return [
 
         'mysql' => [
             'driver' => 'mysql',
-            'host' => '127.0.0.1',
+            'host' =>  'aleebidev.cl0dkh0uwx0v.sa-east-1.rds.amazonaws.com', //'127.0.0.1',
             'port' => '3306',
-            'database' => 'bd_estudo',
-            'username' => 'root',
-            'password' => '123456',
+            'database' => 'aleebidev', //'bd_estudo',
+            'username' => 'aleebidevuser', //'root',
+            'password' => 'FeiJAOlaZanHAdeV', //'123456',
             'unix_socket' => '',
             'charset' => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',
