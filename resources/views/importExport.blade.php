@@ -15,6 +15,7 @@
 		<div class="row">
 			<div class="col-3">
 				<h1>Importar Associados</h1>
+				<h2>IMPORTAR REL(2)</h2>
 
 				{!! Form::open(['url' => 'importAss', 'method' => 'POST','files' => true ]) !!}
 
@@ -27,6 +28,7 @@
 
 			<div class="col-3">
 				<h1>Importar End Associados</h1>
+				<h2>IMPORTAR REL(3)</h2>
 
 				{!! Form::open(['url' => 'importAssEnd', 'method' => 'POST','files' => true ]) !!}
 
