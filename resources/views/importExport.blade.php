@@ -51,6 +51,30 @@
 				{!! Form::close() !!}
 			</div>
 
+			<div class="col-3">
+				<h1>Importar Profissões</h1>
+
+				{!! Form::open(['url' => 'importProf', 'method' => 'POST','files' => true ]) !!}
+
+		        {!! Form::file('import_file_prof', null) !!}
+
+				{!! Form::submit('Upload', ['class' => 'btn btn-primary']) !!}
+
+				{!! Form::close() !!}
+			</div>
+
+			<div class="col-3">
+				<h1>Importar Tipo Veículos</h1>
+
+				{!! Form::open(['url' => 'importTipoVeiculos', 'method' => 'POST','files' => true ]) !!}
+
+		        {!! Form::file('import_file_tipo', null) !!}
+
+				{!! Form::submit('Upload', ['class' => 'btn btn-primary']) !!}
+
+				{!! Form::close() !!}
+			</div>
+
 		</div>
 	</div>
 </body>
