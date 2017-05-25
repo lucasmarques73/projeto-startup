@@ -45,6 +45,8 @@ Route::get('importExport', 'MaatwebsiteDemoController@importExport');
 Route::post('importAss', 'MaatwebsiteDemoController@importAss');
 Route::post('importAssEnd', 'MaatwebsiteDemoController@importAssEnd');
 Route::post('importVec', 'MaatwebsiteDemoController@importVec');
+Route::post('importProf', 'MaatwebsiteDemoController@importProf');
+Route::post('importTipoVeiculos', 'MaatwebsiteDemoController@importTipoVeiculos');
 
 Route::get('info', function(){
     phpinfo();
