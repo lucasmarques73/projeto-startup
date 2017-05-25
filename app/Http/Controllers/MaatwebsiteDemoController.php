@@ -199,11 +199,15 @@ class MaatwebsiteDemoController extends Controller
 		** 4 - Diplomático/Consular;
 		** 5 - Especiais;
 		** 6 - Coleção;
+		** 7 - Particular;
+		** 8 - Taxi;
+		** 9 - Semi Rebocador;
 		*/
-		$val = str_replace("PASSEIO", "1", $val);
+		$val = trim($val);
+		$val = str_replace("PASSEIO", "7", $val);
 		$val = str_replace("ALUGUEL", "2", $val);
-		$val = str_replace("TAXI", "2", $val); // Confirmar qual a categoria 
-		$val = str_replace("SEMI REBOCADOR", "5", $val); // Confirmar qual a categoria 
+		$val = str_replace("TAXI", "8", $val); // Confirmar qual a categoria 
+		$val = str_replace("SEMI REBOCADOR", "9", $val); // Confirmar qual a categoria 
 		return $val;
 	}
 
@@ -220,15 +224,50 @@ class MaatwebsiteDemoController extends Controller
 		** 9  - Hidrogênio;
 		** 10 - Querosene;
 		** 11 - Tetra-fuel;
-		** 12 - Não Informado;
+		** 12 - Bio-Gás;
 		*/
-		$val = str_replace("BIO-GÁS", "7", $val); // Confirmar qual o tipo de combustível
+		$val = trim($val);
+		$val = str_replace("BIO-GÁS", "12", $val); // Confirmar qual o tipo de combustível
 		$val = str_replace("DIESEL", "3", $val);
+		$val = str_replace("ETANOL", "4", $val);
 		$val = str_replace("FLEX", "5", $val);
 		$val = str_replace("GASOLINA", "6", $val);
 		$val = str_replace("NÂO INFORMADO", "12", $val);
 		return $val;
 	}
+	public static function marca($val){
+		$val = trim($val);
+		$val = str_replace("CITROEN", "CITROËN", $val);
+		$val = str_replace("GENERAL MOTORS", "CHEVROLET", $val);
+		$val = str_replace("GM - CHEVROLET", "CHEVROLET", $val);
+		$val = str_replace("JAC MOTORS", "JAC", $val);
+		$val = str_replace("KIA MOTORS", "KIA", $val);
+		$val = str_replace("MERCEDES BENZ", "MERCEDES-BENZ", $val);
+		$val = str_replace("REBOQUE RECRUSUL", "RECRUSUL", $val);
+		$val = str_replace("SAAB-SCANIA", "SCANIA", $val);
+		$val = str_replace("VW - VOLKSWAGEN", "VOLKSWAGEN", $val);
+		return $val;
+	}
+
+	public static function cor($val){
+		$val = trim($val);
+		$val = str_replace("BRANCA", "Branco", $val);
+		$val = str_replace("PRETA", "Preto", $val);
+		$val = str_replace("ROXA", "Roxo", $val);
+		$val = str_replace("MARRON", "Marrom", $val);		
+		$val = str_replace("NÃO ESPECIFICADO", null, $val);		
+		return $val;
+	}
+
+	
+	public static function tipoVec($val){
+		$val = str_replace("CL3 AUTOMOVEL LEVE", "AUTOMOVEL", $val);		
+		$val = str_replace("CL3 REBOCADOR/TRATOR ACIMA 6,9T", "REBOCADOR/TRATOR ACIMA 6,9T", $val);		
+		$val = str_replace("CL3 UTILITARIO DIESEL LEVE", "UTILITARIO DIESEL LEVE", $val);		
+		$val = str_replace("CL3 VAN DIESEL LEVE", "VAN DIESEL LEVE", $val);		
+		return $val;
+	}
+
 
 	public function importVec()
 	{
@@ -241,71 +280,203 @@ class MaatwebsiteDemoController extends Controller
 			if(!empty($data) && $data->count()){
 				foreach ($data as $key => $value) {
 
+
+
 					$value->cpfcnpj = MaatwebsiteDemoController::limpaCPF_CNPJ_CEP($value->cpfcnpj);
-					$value->placa = MaatwebsiteDemoController::limpaCPF_CNPJ_CEP($value->cpfcnpj);
+					$value->placa = MaatwebsiteDemoController::limpaCPF_CNPJ_CEP($value->placa);
 
 					$value->cambio = MaatwebsiteDemoController::cambio($value->cambio);
 					$value->categoria = MaatwebsiteDemoController::categoria($value->categoria);
 					$value->combustivel = MaatwebsiteDemoController::combustivel($value->combustivel);
+					$value->montadora = MaatwebsiteDemoController::marca($value->montadora);
+					$value->cor = MaatwebsiteDemoController::cor($value->cor);
+					$value->tipo_veiculo = MaatwebsiteDemoController::tipoVec($value->tipo_veiculo);
+					
 
-					$cambio = 3;
+					//Não existe o campo Cambio na tabela, por isso estamos inserindo manualmente
+					$cambio	= null;
 
-					//dd($value);
 
+					//Pegar o id da pessoa para inserir nos campos Condutor ou Poprietario
 					$id = "";
-
+					$id_pf = null;
 					$id = DB::table('pessoa_fisicas')->where([
 						['cpf', '=', $value->cpfcnpj],
 						['nome', '=', $value->nome]
 						])->value('id');
-
 					if ($id == "") {
 						$id = DB::table('pessoa_juridicas')->where([
 						['cnpj', '=', $value->cpfcnpj],
 						['razao_social', '=', $value->nome]
 						])->value('id');
 					}
+					//Caso seja PF armazenar como Condutor e Proprietario
+					//Se for PJ vamos armazenar apenas como Proprietario
+					if (strlen($value->cpfcnpj) <= 11){
+						$id_pf = $id;
+					}
+					if ($id == null) {
+						dump($value);
+					}
+
+					//Pegando o id da cor na tabela de cores
+					$cor_id = 0;
+					$cor_id = DB::table('cors')->where('descricao',ucfirst(strtolower($value->cor)))->value('id');
+
+					//PEgando o id do tipo na tabela veiculo_tipos
+					$tipo_id = null;
+					$tipo_id = DB::table('veiculo_tipos')->where('descricao',ucfirst(strtolower($value->tipo_veiculo)))->value('id');
+
+					//Juntando o modelo com a marca. Ex.: A3 1.6 5P;AUDI
+					$modelo	= $value->modelo . ";" . $value->montadora;
+
+
+					//Validando dados e colocando null quando dado inconsistente
+					if (strlen($value->chassi) >= 18) {
+						$value->chassi = null;
+					}
+					if (strlen($value->placa) == 0) {
+						$value->placa = null;
+					}
+					// if ($value->n0_de_passageiros == 0) {
+					// 	$value->n0_de_passageiros = null;
+					// }
+					// if ($value->n0_de_portas == 0) {
+					// 	$value->n0_de_portas = null;
+					// }
+					// if ($value->numero_motor == 0) {
+					// 	$value->numero_motor = null;
+					// }
 
 					$veiculos[] = [
-						'tipo' => (integer) $value->tipo , //FK
-						'cor' => (integer) $value->cor , //FK tabela cors
-						'placa' => (string) $value->placa ,
-						'chassi' => (string) $value->chassi ,
-						'renavam' => (string) $value->renavam ,
+						'veiculo_tipo_id' => (integer) $tipo_id , //FK
+						'cor' => (integer) $cor_id , //FK tabela cors
+						'placa' => $value->placa ,
+						'chassi' =>  $value->chassi ,
+						'renavam' =>  $value->renavam ,
 						'categoria' => (integer) $value->categoria ,
 						'combustivel' => (integer) $value->combustivel ,
 						'ano_fabricacao' => $value->ano ,
 						'ano_modelo' => $value->ano_mod ,
-						'tipo' => (string) $value->tipo ,
-						'cambio' => (integer) $cambio , //Váriavel está com valor fixo pois não há a informação no relatório
-						'numero_portas' => (string) $value->n0_de_portas ,
-						'numero_passageiros' => (string) $value->n0_de_passageiros ,
-						'kilometragem' => (string) $value->km ,
-						'obs' => (string) $value->obs ,
-						'niv' => (string) $value->chassi , //No Brasil, também é conhecido como Número do Chassi.
-						'condutor' => $id ,//(integer) $value->condutor , //FK tabela pessoa
-						'proprietario' => (integer) $value->proprietario , //FK tabela pessoa
+						'modelo' => $modelo ,
+						//'marca' => (string) $value->montadora,
+						'cambio' => $cambio , //Váriavel está com valor fixo pois não há a informação no relatório
+						'numero_portas' => $value->n0_de_portas ,
+						'numero_passageiros' =>  $value->n0_de_passageiros ,
+						'kilometragem' =>  $value->km ,
+						'observacao' =>  $value->obs ,
+						'niv' =>  $value->chassi , //No Brasil, também é conhecido como Número do Chassi.
+						'condutor' => $id_pf ,//(integer) $value->condutor , //FK tabela pessoa
+						'proprietario' => $id , //FK tabela pessoa
 						'notafiscal_emissao' => $value->notafiscal_emissao ,
 						'notafiscal_retirada_veiculo' => $value->notafiscal_retirada_veiculo ,
-						'notafiscal_numero' => (string) $value->notafiscal_numero ,
-						'notafiscal_chave' => (string) $value->notafiscal_chave ,
-						'numero_motor' => (string) $value->numero_motor ,
+						'notafiscal_numero' => $value->notafiscal_numero ,
+						'notafiscal_chave' =>  $value->notafiscal_chave ,
+						'numero_motor' => $value->numero_motor ,
 					];
 				}
 
-				dd($veiculos);
+				dd();
 				
 				if(!empty($veiculos)){
 					
 					foreach (array_chunk($veiculos,1000) as $vec) {
-						DB::table('veiculos')->veiculos($vec);
+						DB::table('veiculos')->insert($vec);
 					}
-					dd('<h1>Insert Record successfully.</h1>');
+					dd('Dados Inseridos na tabela veiculos');
 
 				}
 				else{
 					dd('Erro1');
 				}
+			}
+			else{
+				dd('Erro2');
+			}
+		}
+		else{
+			dd('Erro3');
+		}
+		return back();
+	}
+
+	public function importProf()
+	{
+
+		if(Input::hasFile('import_file_prof')){
+			$path = Input::file('import_file_prof')->getRealPath();
+			$data = Excel::load($path, function($reader) {})->get();
+
+			if(!empty($data) && $data->count()){
+				
+				foreach ($data as $key => $value) {
+					$value->profissao = ucfirst(strtolower($value->profissao));
+
+						$profissao[] = [
+							'descricao' => $value->profissao
+						];						
+											
+				}
+
+				if(!empty($profissao)){
+					foreach (array_chunk($profissao,1000) as $prof) {
+						foreach ($prof as $p) {
+							$x = DB::table('profissaos')->where('descricao', array_get($p,'descricao'))->value('descricao');
+							if ($x == null) {
+								if (array_get($p, 'descricao') != "") {
+									DB::table('profissaos')->insert($p);
+			 					}
+							}
+								
+						}
+					}
+					dd();
+				}
+				dd('Dados inseridos nas tabelas profissao');
+			}
+			else{
+				dd('Erro2');
+			}
+		}
+		else{
+			dd('Erro3');
+		}
+		return back();
+	}
+
+	public function importTipoVeiculos()
+	{
+
+		if(Input::hasFile('import_file_tipo')){
+			$path = Input::file('import_file_tipo')->getRealPath();
+			$data = Excel::load($path, function($reader) {})->get();
+
+			if(!empty($data) && $data->count()){
+				
+				foreach ($data as $key => $value) {
+					$value->tipo_veiculo = MaatwebsiteDemoController::tipoVec($value->tipo_veiculo);
+					$value->tipo_veiculo = ucfirst(strtolower($value->tipo_veiculo));
+
+						$tipo_veiculo[] = [
+							'descricao' => $value->tipo_veiculo
+						];													
+				}
+
+				if(!empty($tipo_veiculo)){
+					foreach (array_chunk($tipo_veiculo,1000) as $tipo) {
+						foreach ($tipo as $t) {
+							$x = DB::table('veiculo_tipos')->where('descricao', array_get($t,'descricao'))->value('descricao');
+							if ($x == null) {
+								if (array_get($t, 'descricao') != "") {
+									DB::table('veiculo_tipos')->insert($t);
+			 					}
+							}
+								
+						}
+					}
+					dd();
+				}
+				dd('Dados inseridos nas tabelas veiculo_tipos');
 			}
 			else{
 				dd('Erro2');
