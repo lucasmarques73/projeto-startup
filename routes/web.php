@@ -48,6 +48,10 @@ Route::post('importVec', 'MaatwebsiteDemoController@importVec');
 Route::post('importProf', 'MaatwebsiteDemoController@importProf');
 Route::post('importTipoVeiculos', 'MaatwebsiteDemoController@importTipoVeiculos');
 
+
+Route::get('placasIguais', 'MaatwebsiteDemoController@placasIguais');
+Route::get('limpaTelefone', 'MaatwebsiteDemoController@limpaTelefone');
+
 Route::get('info', function(){
     phpinfo();
 });
