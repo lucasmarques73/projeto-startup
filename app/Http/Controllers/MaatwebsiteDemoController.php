@@ -10,12 +10,14 @@ use Excel;
 
 class MaatwebsiteDemoController extends Controller
 {
-	public static function limpaCPF_CNPJ_CEP($valor){
+	public static function limpaCampos($valor){
 	 $valor = trim($valor);
 	 $valor = str_replace(".", "", $valor);
 	 $valor = str_replace(",", "", $valor);
 	 $valor = str_replace("-", "", $valor);
 	 $valor = str_replace("/", "", $valor);
+	 $valor = str_replace("(", "", $valor);
+	 $valor = str_replace(")", "", $valor);
 	 $valor = str_replace(" ", "", $valor);
 	 return $valor;
 	}
@@ -54,11 +56,11 @@ class MaatwebsiteDemoController extends Controller
 					}
 					else{
 
-						$value->cpfcnpj = MaatwebsiteDemoController::limpaCPF_CNPJ_CEP($value->cpfcnpj);
+						$value->cpfcnpj = MaatwebsiteDemoController::limpaCampos($value->cpfcnpj);
 						$value->data_nascimento = str_replace("00/00/0000", null, $value->data_nascimento);
 						$value->data_nascimento = date('Y-m-d', strtotime($value->data_nascimento));
 						$value->sexo = MaatwebsiteDemoController::genero($value->sexo);
-						$value->cep = MaatwebsiteDemoController::limpaCPF_CNPJ_CEP($value->cep);
+						$value->cep = MaatwebsiteDemoController::limpaCampos($value->cep);
 
 						$pessoa = [
 							'end_cep' => (string) $value->cep ,
@@ -137,7 +139,7 @@ class MaatwebsiteDemoController extends Controller
 
 					$value->receber_e_mail = str_replace("SIM","1" , $value->receber_e_mail);
 					$value->receber_sms = str_replace("SIM","1" , $value->receber_sms);
-					$value->cpfcnpj = MaatwebsiteDemoController::limpaCPF_CNPJ_CEP($value->cpfcnpj);
+					$value->cpfcnpj = MaatwebsiteDemoController::limpaCampos($value->cpfcnpj);
 
 					$id = "";
 
@@ -277,13 +279,12 @@ class MaatwebsiteDemoController extends Controller
 			$path = Input::file('import_file_vec')->getRealPath();
 			$data = Excel::load($path, function($reader) {})->get();
 			
+			$i = 0;
 			if(!empty($data) && $data->count()){
 				foreach ($data as $key => $value) {
 
-
-
-					$value->cpfcnpj = MaatwebsiteDemoController::limpaCPF_CNPJ_CEP($value->cpfcnpj);
-					$value->placa = MaatwebsiteDemoController::limpaCPF_CNPJ_CEP($value->placa);
+					$value->cpfcnpj = MaatwebsiteDemoController::limpaCampos($value->cpfcnpj);
+					$value->placa = MaatwebsiteDemoController::limpaCampos($value->placa);
 
 					$value->cambio = MaatwebsiteDemoController::cambio($value->cambio);
 					$value->categoria = MaatwebsiteDemoController::categoria($value->categoria);
