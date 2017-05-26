@@ -504,4 +504,49 @@ class MaatwebsiteDemoController extends Controller
 		}
 		return back();
 	}
+
+
+	public function placasIguais()
+	{
+		$veiculos = DB::table('veiculos')
+			->select('placa','chassi', 'proprietario','modelo', 'observacao')
+			->orderBy('placa')
+			->get();
+		
+		$i = 0;
+		foreach ($veiculos as $key => $value) {
+			if ($value->placa != null) {
+				$count = DB::table('veiculos')
+										->select(DB::raw('count(*) as placa_count'))
+										->where('placa', $value->placa)
+										->get();
+
+				foreach ($count as $c) {
+					//dd($c->placa_count);
+					if ($c->placa_count > 1) {
+						dump($value);
+						$i++;
+					}
+				}
+			}		
+			
+		}
+		dump($i);
+		dd("Stop");
+	}
+
+	public function limpaTelefone()
+	{
+		/*
+		 *
+		 *	Função para buscar os telefones no banco
+		 *	e limpar todos os campos de caracteres
+		 *	especiais como () - 
+		 ===========================================
+		 */
+		 
+
+		 dd("Telefones foram limpos");
+
+	}
 }
