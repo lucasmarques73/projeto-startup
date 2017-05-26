@@ -317,6 +317,7 @@ class MaatwebsiteDemoController extends Controller
 						$id_pf = $id;
 					}
 					if ($id == null) {
+						dump('Id == Null');
 						dump($value);
 					}
 
@@ -324,7 +325,7 @@ class MaatwebsiteDemoController extends Controller
 					$cor_id = 0;
 					$cor_id = DB::table('cors')->where('descricao',ucfirst(strtolower($value->cor)))->value('id');
 
-					//PEgando o id do tipo na tabela veiculo_tipos
+					//Pegando o id do tipo na tabela veiculo_tipos
 					$tipo_id = null;
 					$tipo_id = DB::table('veiculo_tipos')->where('descricao',ucfirst(strtolower($value->tipo_veiculo)))->value('id');
 
@@ -336,8 +337,17 @@ class MaatwebsiteDemoController extends Controller
 					if (strlen($value->chassi) >= 18) {
 						$value->chassi = null;
 					}
+
+					//Verifica se há algo no campo placa, caso seja 0 salvamos como null
 					if (strlen($value->placa) == 0) {
 						$value->placa = null;
+					}
+					//Verifica se o campo placa contém 8 ou mais caracteres
+					else if (strlen($value->placa) >= 8) {
+						//Caso sim, digitamos a placa errada em obs
+						$value->obs = "Placa com digitos a mais: " . $value->placa;
+						//E cortamos a string para salvar apenas os 7 primeiros caracteres.
+						$value->placa = substr($value->placa,0,7);
 					}
 					// if ($value->n0_de_passageiros == 0) {
 					// 	$value->n0_de_passageiros = null;
@@ -375,16 +385,23 @@ class MaatwebsiteDemoController extends Controller
 						'notafiscal_chave' =>  $value->notafiscal_chave ,
 						'numero_motor' => $value->numero_motor ,
 					];
+
+
+					if (strlen($value->obs) > 0) {
+						dump("Contém OBS");
+						dump($value);
+						//dump($veiculos);
+					}
+					
 				}
 
-				dd();
-				
 				if(!empty($veiculos)){
 					
 					foreach (array_chunk($veiculos,1000) as $vec) {
 						DB::table('veiculos')->insert($vec);
+						$i++;
 					}
-					dd('Dados Inseridos na tabela veiculos');
+					dd('Foram inseridos ' . $i .'veículos na tabela veiculos');
 
 				}
 				else{
@@ -431,7 +448,6 @@ class MaatwebsiteDemoController extends Controller
 								
 						}
 					}
-					dd();
 				}
 				dd('Dados inseridos nas tabelas profissao');
 			}
