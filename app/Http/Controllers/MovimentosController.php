@@ -5,14 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
-use Prettus\Validator\Contracts\ValidatorInterface;
-use Prettus\Validator\Exceptions\ValidatorException;
 use App\Http\Requests\MovimentoCreateRequest;
 use App\Http\Requests\MovimentoUpdateRequest;
 use App\Repositories\MovimentoRepository;
-use App\Validators\MovimentoValidator;
 
-use App\Repositories\ParcelaRepository;
+use App\Services\MovimentoService;
 
 
 class MovimentosController extends Controller
@@ -24,17 +21,15 @@ class MovimentosController extends Controller
     protected $repository;
 
     /**
-     * @var MovimentoValidator
+     * @var MovimentoService
      */
-    protected $validator;
+     protected $service;
 
-    protected $Parcelarepository;
 
-    public function __construct(MovimentoRepository $repository,ParcelaRepository $Parcelarepository, MovimentoValidator $validator)
+    public function __construct(MovimentoRepository $repository, MovimentoService $service)
     {
         $this->repository = $repository;
-        $this->validator  = $validator;
-        $this->Parcelarepository  = $Parcelarepository;
+        $this->service = $service;
     }
 
 
@@ -46,7 +41,7 @@ class MovimentosController extends Controller
     public function index()
     {
         $this->repository->pushCriteria(app('Prettus\Repository\Criteria\RequestCriteria'));
-        $movimentos = $this->repository->all();
+        $movimentos = $this->repository->paginate(5);
 
         if (request()->wantsJson()) {
 
@@ -60,71 +55,14 @@ class MovimentosController extends Controller
 
     public function create()
     {
-      $movimentos = $this->repository->all();
-
-      return view('movimentos.form-movimento', ['movimentos' => $movimentos]);
+      return view ('movimentos.form-movimento');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  MovimentoCreateRequest $request
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function store(MovimentoCreateRequest $request)
     {
+        $response =  $this->service->store($request->all());
 
-        try {
-
-            $this->validator->with($request->all())->passesOrFail(ValidatorInterface::RULE_CREATE);
-
-            $movimento = $this->repository->create($request->all());
-            $valor_parcela = $request->get('valor_total') / $request->get('numero_parcela');
-
-            /**
-            *   $data = date('Y-m-d', strtotime("+1 month", strtotime($data)));
-            *
-            *   Adionando 1 mês para data;
-            **/
-            $data_emissao = $request->get('data_emissao');
-
-            for ($i = 1; $i <= $request->get('numero_parcela'); $i++) {
-
-                $data_vencimento = date('Y-m-d', strtotime("+" . $i . " month", strtotime($data_emissao)));
-
-                $parcela = $this->Parcelarepository->create([
-                  'movimento_id' => $movimento['id'],
-                  'numero_parcela'      => $i              ,
-                  'valor_parcela'       => $valor_parcela  ,
-                  'status'              => 'à pagar'       ,
-                  'data_vencimento'     => $data_vencimento
-                ]);
-            }
-
-
-
-            $response = [
-                'message' => 'Movimento created.',
-                'data'    => $movimento->toArray(),
-            ];
-
-            if ($request->wantsJson()) {
-
-                return response()->json($response);
-            }
-
-            return redirect()->back()->with('message', $response['message']);
-        } catch (ValidatorException $e) {
-            if ($request->wantsJson()) {
-                return response()->json([
-                    'error'   => true,
-                    'message' => $e->getMessageBag()
-                ]);
-            }
-
-            return redirect()->back()->withErrors($e->getMessageBag())->withInput();
-        }
+        return redirect()->back()->with('message', $response['message']);
     }
 
 
@@ -176,42 +114,15 @@ class MovimentosController extends Controller
      */
     public function update(MovimentoUpdateRequest $request, $id)
     {
+        $response = $this->service->update($data, $id);
 
-        try {
-
-            $this->validator->with($request->all())->passesOrFail(ValidatorInterface::RULE_UPDATE);
-
-            $movimento = $this->repository->update($request->all(), $id);
-
-            $response = [
-                'message' => 'Movimento updated.',
-                'data'    => $movimento->toArray(),
-            ];
-
-            if ($request->wantsJson()) {
-
-                return response()->json($response);
-            }
-
-            return redirect()->back()->with('message', $response['message']);
-        } catch (ValidatorException $e) {
-
-            if ($request->wantsJson()) {
-
-                return response()->json([
-                    'error'   => true,
-                    'message' => $e->getMessageBag()
-                ]);
-            }
-
-            return redirect()->back()->withErrors($e->getMessageBag())->withInput();
-        }
+        return redirect()->back()->with('message', $response['message']);
     }
 
 
     /**
      * Remove the specified resource from storage.
-     *
+     *update($data, $id)
      * @param  int $id
      *
      * @return \Illuminate\Http\Response

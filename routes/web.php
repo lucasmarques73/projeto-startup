@@ -1,18 +1,57 @@
 <?php
+Auth::routes();
 
+Route::group(['middleware' => 'auth'], function () {
 //Rotdas das Movimentações
-Route::get('/movimentos', ['as' => 'movimentos.index', 'uses' => 'MovimentosController@index']);
-Route::post('/movimentos',['as' => 'movimentos.salvar', 'uses' => 'MovimentosController@store'] );
-Route::get('/movimentos/novo', ['as' => 'movimentos.novo', 'uses' => 'MovimentosController@create']);
+    Route::get('/movimentos', ['as' => 'movimentos.index', 'uses' => 'MovimentosController@index']);
+    Route::post('/movimentos',['as' => 'movimentos.salvar', 'uses' => 'MovimentosController@store'] );
+    Route::get('/movimentos/novo', ['as' => 'movimentos.novo', 'uses' => 'MovimentosController@create']);
 
-// Rotas das Parcelas
-Route::get('/parcelas', ['as' => 'parcelas.index' , 'uses' => 'ParcelasController@index']);
-Route::post('/parcelas', ['as' => 'parcelas.salvar', 'uses' => 'ParcelasController@store']);
-Route::get('/parcelas/novo', ['as' => 'parcelas.novo', 'uses' => 'ParcelasController@create']);
+    Route::get('/movimentos/{movimento_id}/parcelas',['as' => 'movimentos.parcela', 'uses' => 'ParcelasController@show']);
 
-//Parcelas PDF
-Route::get('/parcelas/pdf', function(){
-  $parcelas = App\Entities\Parcela::all();
-  $pdf = PDF::loadView('parcelas.pdf',['parcelas' => $parcelas]);
-  return $pdf->download('parcelas.pdf');
+    //Parcelas PDF
+    Route::get('/parcelas/report', ['as' => 'parcelas.report' , 'uses' => 'ParcelasController@report']);
+    Route::get('/movimentos/report/{id}', ['as' => 'movimentos.reportParcela' , 'uses' => 'ParcelasController@reportParcela']);
+
+    // Rotas das Parcelas
+    Route::get('/parcelas', ['as' => 'parcelas.index' , 'uses' => 'ParcelasController@index']);
+    //Route::get('/parcelas/between', ['as' => 'parcelas.between' , 'uses' => 'ParcelasController@between']);
+    Route::post('/parcelas', ['as' => 'parcelas.salvar', 'uses' => 'ParcelasController@store']);
+    Route::put('/parcelas', ['as' => 'parcelas.salvar', 'uses' => 'ParcelasController@update']);
+    Route::get('/parcelas/novo', ['as' => 'parcelas.novo', 'uses' => 'ParcelasController@create']);
+    Route::get('/parcelas/{id}', ['as' => 'parcelas.edit', 'uses' => 'ParcelasController@edit']);
+    Route::patch('/parcelas/{id}', ['as' => 'parcelas.edit', 'uses' => 'ParcelasController@update']);
+
+
+    //--------- Pagar parcela
+    Route::put('/parcelas/{id}/pagar', ['as' => 'parcelas.pagar', 'uses' => 'ParcelasController@registrarPagamento']);
+
+
+    Route::get('/home', 'HomeController@index');
+});
+
+Route::post('oauth/access_token', function(){
+    return Response::json(Authorize::issueAccessToken());
+});
+
+// Route::get('/api', function(){
+//     return [
+//         'id' => 1,
+//         'name' => 'teste'
+//     ];
+// })->middleware('auth:api');
+
+Route::get('importExport', 'MaatwebsiteDemoController@importExport');
+Route::post('importAss', 'MaatwebsiteDemoController@importAss');
+Route::post('importAssEnd', 'MaatwebsiteDemoController@importAssEnd');
+Route::post('importVec', 'MaatwebsiteDemoController@importVec');
+Route::post('importProf', 'MaatwebsiteDemoController@importProf');
+Route::post('importTipoVeiculos', 'MaatwebsiteDemoController@importTipoVeiculos');
+
+
+Route::get('placasIguais', 'MaatwebsiteDemoController@placasIguais');
+Route::get('limpaTelefone', 'MaatwebsiteDemoController@limpaTelefone');
+
+Route::get('info', function(){
+    phpinfo();
 });

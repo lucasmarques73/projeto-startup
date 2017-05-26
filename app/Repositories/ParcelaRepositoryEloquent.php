@@ -14,6 +14,10 @@ use App\Validators\ParcelaValidator;
  */
 class ParcelaRepositoryEloquent extends BaseRepository implements ParcelaRepository
 {
+
+    protected $fieldSearchable = [
+       'data_pagamento', 'data_vencimento', 'valor_pago', 'numero_parcela','valor_parcela', 'status'     
+   ];
     /**
      * Specify Model class name
      *

@@ -20,7 +20,7 @@ class CreateParcelasTable extends Migration
 
 						$table->string('status',50);
 
-						$table->date('data_vencimento')->nullable();
+						$table->date('data_vencimento');
 						$table->date('data_pagamento')->nullable();
 
 						$table->decimal('valor_parcela',10,2);

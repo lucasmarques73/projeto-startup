@@ -3,16 +3,26 @@
 @section('content')
 <div class="container">
     <div class="row">
-        <div class="col-md-8 col-md-offset-2">
+        <div class="col-md-10 col-md-offset-1">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                  Parcelas
-                  <a class="btn btn-danger" href="{{url('parcelas/pdf')}}">PDF</a>
-                  <a class="pull-right" href="{{url('parcelas/novo')}}">Novo Parcela</a>
+                         Parcelas
+                        <a class="btn btn-danger" href="{{route('parcelas.report')}}">PDF</a>
+                        <a href="{{Request::url()}}?search=status:pago" class="btn btn-default"> Pagos</a>
+                        <a href="{{Request::url()}}?search=status:à pagar" class="btn btn-default"> à Pagar</a>
+                        <a class="pull-right" href="{{route('parcelas.novo')}}">Novo Parcela</a>
+                </div>
+                <div class="panel-heading">
+
+                    {!! Form::open(['route' => 'parcelas.index', 'method' => 'get', 'class' => 'form-inline']) !!}
+                    {!! Form::input('search', 'search', null, ['class' => 'form-control']) !!}
+                    {!! Form::submit('Buscar', ['class' => 'btn btn-primary'])!!}
+                    {!! Form::close() !!}
                 </div>
 
                 <table class="table">
                     <thead>
+                      <th>#</th>
                       <th>Movimentação</th>
                       <th>Status</th>
                       <th>Número da Parcela</th>
@@ -26,19 +36,34 @@
                     <tbody>
                       @foreach($parcelas as $parcela)
                       <tr>
-                        <td>{{$parcela->movimento_id}}: {{ $parcela->Movimento->descricao }}</td>
-                        <td>{{$parcela->status}}</td>
-                        <td>{{$parcela->numero_parcela}}</td>
-                        <td>{{$parcela->data_vencimento}}</td>
-                        <td>{{$parcela->data_pagamento}}</td>
-                        <td>{{$parcela->valor_parcela}}</td>
-                        <td>{{$parcela->valor_pago}}</td>
-                        <td><button class="btn btn-success" data-toggle="modal" data-target="#myModal">Pagar</button></td>
+                          <td>{{ $parcela->id }} </td>
+                          <td>{{$parcela->movimento_id}}: {{ $parcela->Movimento->descricao }}</td>
+                          <td>{{$parcela->status}}</td>
+                          <td>{{$parcela->numero_parcela}}</td>
+                            <td>{{$parcela->data_vencimento}}</td>
+                            <td>{{$parcela->data_pagamento}}</td>
+                            <td>{{$parcela->valor_parcela}}</td>
+                            <td>{{$parcela->valor_pago}}</td>
+                            <td>
+                                {!! Form::open(['route' => ['parcelas.pagar', $parcela->id], 'method' => 'put']) !!}
+                                {!! Form::submit('pagar', ['class' => 'btn btn-success']) !!}
+                                {!! Form::close() !!}
+                            </td>
+                            <td>
+                                {{--
+                                $('*['data-toggle="modal"']').click(function(){
+                                $(this).sibilings('form').addClass('show');
+                                }) --}}
+                                <!--<button class="btn btn-success" data-toggle="modal" data-target="#myModal">Pagar</button></td> -->
+                                <a href="{{ route('parcelas.edit',$parcela->id)}}" class="btn btn-warning">Editar</a>
+                            </td>
                       </tr>
                     @endforeach
                     </tbody>
                   </table>
-
+                  <div class="pagination-bar text-center">
+                      {{$parcelas->render()}}
+                  </div>
             </div>
         </div>
     </div>
@@ -48,13 +73,16 @@
 <!-- Modal -->
  <div class="modal fade" id="myModal" role="dialog">
    <div class="modal-dialog">
-     {!! Form::open(['route' => 'parcelas.salvar', 'method' => 'POST']) !!}
+     {!! Form::open(['route' => 'parcelas.salvar', 'method' => 'PUT']) !!}
        <!-- Modal content-->
        <div class="modal-content">
          <div class="modal-header">
            <button type="button" class="close" data-dismiss="modal">&times;</button>
            <h4 class="modal-title">Dados do Pagamento</h4>
          </div>
+         @if(Session::has('message'))
+           <div class='alert '>{{Session::get('message')}}</div>
+         @endif
 
            <div class="modal-body">
              <div class="container-fluid">

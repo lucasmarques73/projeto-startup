@@ -5,15 +5,12 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
-use Prettus\Validator\Contracts\ValidatorInterface;
-use Prettus\Validator\Exceptions\ValidatorException;
 use App\Http\Requests\ParcelaCreateRequest;
 use App\Http\Requests\ParcelaUpdateRequest;
 use App\Repositories\ParcelaRepository;
-use App\Validators\ParcelaValidator;
 
 use App\Repositories\MovimentoRepository;
-
+use App\Services\ParcelaService;
 
 class ParcelasController extends Controller
 {
@@ -24,17 +21,20 @@ class ParcelasController extends Controller
     protected $repository;
 
     /**
-     * @var ParcelaValidator
+     * @var MovimentoRepository
      */
-    protected $validator;
-
     protected $MovimentoRepository;
 
-    public function __construct(ParcelaRepository $repository,MovimentoRepository $MovimentoRepository, ParcelaValidator $validator)
+    /**
+     * @var ParcelaService
+     */
+     protected $service;
+
+    public function __construct(ParcelaRepository $repository, MovimentoRepository $MovimentoRepository, ParcelaService $service)
     {
         $this->repository = $repository;
-        $this->validator  = $validator;
-        $this->MovimentoRepository  = $MovimentoRepository;
+        $this->service = $service;
+        $this->MovimentoRepository = $MovimentoRepository;
     }
 
 
@@ -46,7 +46,7 @@ class ParcelasController extends Controller
     public function index()
     {
         $this->repository->pushCriteria(app('Prettus\Repository\Criteria\RequestCriteria'));
-        $parcelas = $this->repository->all();
+        $parcelas = $this->repository->paginate(6);
 
         if (request()->wantsJson()) {
 
@@ -56,6 +56,20 @@ class ParcelasController extends Controller
         }
 
         return view('parcelas.index', ['parcelas' => $parcelas]);
+    }
+
+    public function report()
+    {
+        $parcelas = $this->repository->all();
+        $pdf = \PDF::loadView('parcelas.pdf.pdf',['parcelas' => $parcelas]);
+        return $pdf->stream('parcelas.pdf');
+    }
+
+    public function reportParcela($movimento_id)
+    {
+        $parcelas = $this->repository->findWhere(['movimento_id' => $movimento_id]);
+        $pdf = \PDF::loadView('parcelas.pdf.pdf',['parcelas' => $parcelas]);
+        return $pdf->stream('parcelas.pdf');
     }
 
     public function create()
@@ -74,33 +88,10 @@ class ParcelasController extends Controller
      */
     public function store(ParcelaCreateRequest $request)
     {
-        try {
+        $response = $this->service->store($request->all());
+        
 
-            $this->validator->with($request->all())->passesOrFail(ValidatorInterface::RULE_CREATE);
-
-            $parcela = $this->repository->create($request->all());
-
-            $response = [
-                'message' => 'Parcela created.',
-                'data'    => $parcela->toArray(),
-            ];
-
-            if ($request->wantsJson()) {
-
-                return response()->json($response);
-            }
-
-            return redirect()->back()->with('message', $response['message']);
-        } catch (ValidatorException $e) {
-            if ($request->wantsJson()) {
-                return response()->json([
-                    'error'   => true,
-                    'message' => $e->getMessageBag()
-                ]);
-            }
-
-            return redirect()->back()->withErrors($e->getMessageBag())->withInput();
-        }
+        return redirect()->back()->with('message', $response['message']);
     }
 
 
@@ -111,79 +102,69 @@ class ParcelasController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($movimento_id)
     {
-        $parcela = $this->repository->find($id);
+        $parcelas = $this->repository->scopeQuery(function ($query) use($movimento_id){
+            return $query->where(['movimento_id' => $movimento_id]);
+        })->paginate(3);
 
-        if (request()->wantsJson()) {
-
-            return response()->json([
-                'data' => $parcela,
-            ]);
-        }
-
-        return view('parcelas.show', compact('parcela'));
+        return view('parcelas.index', ['parcelas' => $parcelas ,'movimento_id' => $movimento_id]);
     }
+ 
+    public function between(Request $request)
+    {
+        $val = $request;
+        
+        $parcelas = $this->repository->scopeQuery(function ($query) use ($val){
+            return $query->whereBetween('valor_parcela', $val);
+        })->paginate(3);
 
-
+        return view('parcelas.index', ['parcelas' => $parcelas]);
+    }
+   
     /**
      * Show the form for editing the specified resource.
      *
      * @param  int $id
-     *
+     *t
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
     {
+      $movimentos = $this->MovimentoRepository->lists('descricao', 'id');
+      $parcela = $this->repository->find($id);
 
+      return view('parcelas.form-parcela', ['movimentos' => $movimentos, 'parcela' => $parcela]);
+    }
+
+
+    public function registrarPagamento(Request $request, $id)
+    {
         $parcela = $this->repository->find($id);
 
-        return view('parcelas.edit', compact('parcela'));
+        $data = [
+          'data_pagamento'  => date('Y-m-d'),
+          'valor_pago'      => $parcela->valor_parcela,
+          'status'          => 'pago',
+        ];
+
+        $parcela = $this->repository->update($data, $id);
+
+        $response = [
+            'message' => 'Parcela paga.',
+            'data'    => $parcela->toArray(),
+        ];
+
+        return redirect()->back()->with('message', $response['message']);
     }
 
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  ParcelaUpdateRequest $request
-     * @param  string            $id
-     *
-     * @return Response
-     */
     public function update(ParcelaUpdateRequest $request, $id)
     {
+        $response =  $this->service->update($request->all(), $id);
 
-        try {
-
-            $this->validator->with($request->all())->passesOrFail(ValidatorInterface::RULE_UPDATE);
-
-            $parcela = $this->repository->update($request->all(), $id);
-
-            $response = [
-                'message' => 'Parcela updated.',
-                'data'    => $parcela->toArray(),
-            ];
-
-            if ($request->wantsJson()) {
-
-                return response()->json($response);
-            }
-
-            return redirect()->back()->with('message', $response['message']);
-        } catch (ValidatorException $e) {
-
-            if ($request->wantsJson()) {
-
-                return response()->json([
-                    'error'   => true,
-                    'message' => $e->getMessageBag()
-                ]);
-            }
-
-            return redirect()->back()->withErrors($e->getMessageBag())->withInput();
-        }
+        return redirect()->back()->with('message', $response['message']);
     }
-
 
     /**
      * Remove the specified resource from storage.

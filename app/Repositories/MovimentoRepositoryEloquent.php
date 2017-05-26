@@ -15,10 +15,14 @@ use App\Validators\MovimentoValidator;
 class MovimentoRepositoryEloquent extends BaseRepository implements MovimentoRepository
 {
 
+
   public function lists($column = 'title', $key = 'id', $limit = null)
   {
       return $this->model->pluck($column, $key)->all();
   }
+  protected $fieldSearchable = [
+     'tipo','categoria', 'descricao', 'data_emissao'     
+ ];
 
     /**
      * Specify Model class name

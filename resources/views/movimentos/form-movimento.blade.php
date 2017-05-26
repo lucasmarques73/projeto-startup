@@ -7,7 +7,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                   Dados da Movimento
-                  <a class="pull-right" href="{{url('movimentos')}}">Lista de Movimentos</a>
+                  <a class="pull-right" href="{{route('movimentos.index')}}">Lista de Movimentos</a>
                 </div>
 
                 <div class="panel-body">
@@ -17,23 +17,35 @@
 
                   {!! Form::open(['route' => 'movimentos.salvar', 'method' => 'POST']) !!}
 
-                  {!! Form::label('tipo', 'Tipo') !!}
-                  {!! Form::input('text', 'tipo', null, ['class' => 'form-control','autofocus', 'placeholder' => 'Tipo'])!!}
+                    <div class="form-group">
+                        {!! Form::label('tipo', 'Tipo') !!}
+                        {!! Form::select('tipo', ['1' => 'UM', '2' => 'DOIS', '3' => 'TRÊS'], '1',['class' => 'form-control']) !!}
+                    </div>
 
-                  {!! Form::label('categoria', 'Categoria') !!}
-                  {!! Form::input('text', 'categoria', null, ['class' => 'form-control', 'placeholder' => 'Categoria'])!!}
+                    <div class="form-group">
+                      {!! Form::label('categoria', 'Categoria') !!}
+                      {!! Form::select('categoria', ['a' => 'AAA', 'b' => 'BBB', 'c' => 'CCC'], 'a',['class' => 'form-control']) !!}
+                    </div>
 
-                  {!! Form::label('descricao', 'Descrição') !!}
-                  {!! Form::input('text', 'descricao', null, ['class' => 'form-control', 'placeholder' => 'Descrição'])!!}
+                    <div class="form-group">
+                      {!! Form::label('descricao', 'Descrição') !!}
+                      {!! Form::input('text', 'descricao', null, ['class' => 'form-control', 'placeholder' => 'Descrição'])!!}
+                    </div>
 
-                  {!! Form::label('data_emissao', 'Data de Emissão') !!}
-                  {!! Form::input('date', 'data_emissao', null, ['class' => 'form-control'])!!}
+                    <div class="form-group">
+                        {!! Form::label('data_emissao', 'Data de Emissão') !!}
+                        {!! Form::input('date', 'data_emissao', null, ['class' => 'form-control'])!!}
+                    </div>
 
-                  {!! Form::label('valor_total', 'Valor Total') !!}
-                  {!! Form::input('number', 'valor_total', null, ['class' => 'form-control', 'placeholder' => 'Valor Total'])!!}
+                    <div class="form-group">
+                        {!! Form::label('valor_total', 'Valor Total') !!}
+                        {!! Form::input('number', 'valor_total', null, ['class' => 'form-control', 'placeholder' => 'Valor Total'])!!}
+                    </div>
 
-                  {!! Form::label('numero_parcela', 'Número de Parcelas') !!}
-                  {!! Form::input('number', 'numero_parcela', null, ['class' => 'form-control', 'placeholder' => 'Número de Parcelas'])!!}
+                    <div class="form-group">
+                        {!! Form::label('numero_parcela', 'Número de Parcelas') !!}
+                        {!! Form::selectRange('numero_parcela', 1, 5, 1, ['class' => 'form-control']) !!}
+                    </div>
 
                   {!! Form::submit('Salvar', ['class' => 'btn btn-primary'])!!}
 
